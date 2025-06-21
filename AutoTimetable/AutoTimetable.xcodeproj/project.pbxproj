@@ -6,6 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		3B5EC2962DF1730E0086A469 /* CombineMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 3B5EC2952DF1730E0086A469 /* CombineMoya */; };
+		3B5EC2982DF1730E0086A469 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 3B5EC2972DF1730E0086A469 /* Moya */; };
+		3B5EC29A2DF1730E0086A469 /* ReactiveMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 3B5EC2992DF1730E0086A469 /* ReactiveMoya */; };
+		3B5EC29C2DF1730E0086A469 /* RxMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 3B5EC29B2DF1730E0086A469 /* RxMoya */; };
+		3B5EC2B02DF195F10086A469 /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 3B5EC2AF2DF195F10086A469 /* SwiftKeychainWrapper */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		3B8D89F52DEEC37E00AE1944 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +60,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B5EC2982DF1730E0086A469 /* Moya in Frameworks */,
+				3B5EC2962DF1730E0086A469 /* CombineMoya in Frameworks */,
+				3B5EC2B02DF195F10086A469 /* SwiftKeychainWrapper in Frameworks */,
+				3B5EC29C2DF1730E0086A469 /* RxMoya in Frameworks */,
+				3B5EC29A2DF1730E0086A469 /* ReactiveMoya in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +125,11 @@
 			);
 			name = AutoTimetable;
 			packageProductDependencies = (
+				3B5EC2952DF1730E0086A469 /* CombineMoya */,
+				3B5EC2972DF1730E0086A469 /* Moya */,
+				3B5EC2992DF1730E0086A469 /* ReactiveMoya */,
+				3B5EC29B2DF1730E0086A469 /* RxMoya */,
+				3B5EC2AF2DF195F10086A469 /* SwiftKeychainWrapper */,
 			);
 			productName = AutoTimetable;
 			productReference = 3B8D89E62DEEC37D00AE1944 /* AutoTimetable.app */;
@@ -195,6 +213,10 @@
 			);
 			mainGroup = 3B8D89DD2DEEC37C00AE1944;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				3B5EC2942DF1730E0086A469 /* XCRemoteSwiftPackageReference "Moya" */,
+				3B5EC2AE2DF195F10086A469 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3B8D89E72DEEC37D00AE1944 /* Products */;
 			projectDirPath = "";
@@ -595,6 +617,53 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3B5EC2942DF1730E0086A469 /* XCRemoteSwiftPackageReference "Moya" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Moya/Moya.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 15.0.3;
+			};
+		};
+		3B5EC2AE2DF195F10086A469 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jrendel/SwiftKeychainWrapper";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3B5EC2952DF1730E0086A469 /* CombineMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3B5EC2942DF1730E0086A469 /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = CombineMoya;
+		};
+		3B5EC2972DF1730E0086A469 /* Moya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3B5EC2942DF1730E0086A469 /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = Moya;
+		};
+		3B5EC2992DF1730E0086A469 /* ReactiveMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3B5EC2942DF1730E0086A469 /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = ReactiveMoya;
+		};
+		3B5EC29B2DF1730E0086A469 /* RxMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3B5EC2942DF1730E0086A469 /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = RxMoya;
+		};
+		3B5EC2AF2DF195F10086A469 /* SwiftKeychainWrapper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3B5EC2AE2DF195F10086A469 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */;
+			productName = SwiftKeychainWrapper;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3B8D89DE2DEEC37C00AE1944 /* Project object */;
 }
