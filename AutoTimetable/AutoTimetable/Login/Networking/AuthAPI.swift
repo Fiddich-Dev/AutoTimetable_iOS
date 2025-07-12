@@ -9,97 +9,122 @@ import Foundation
 import Moya
 
 enum AuthAPI {
-    case authSchoolLogin(school: String, id: String, password: String)
-    case login(school: String, studentId: String, password: String)
+    case healthCheck
+    case join(studentId: String, password: String, username: String)
+    case checkDuplicatedMember(studentId: String)
+    case withdraw
+    case login(studentId: String, password: String)
+    case logout
+    case reissueToken
+    case passwordReset(studentId: String, newPassword: String)
     case mailSend(email: String)
     case mailVerify(email: String, authCode: String)
-    case join(studentId: String, password: String, username: String, school: String, department: String)
-    case passwordReset(school: String, studentId: String, newPassword: String)
-    case checkDuplicatedMember(studentId: String, school: String)
-    
 }
 
 
 extension AuthAPI: TargetType {
     
     var baseURL: URL {
-        URL(string: "http://localhost:8080")!
+        URL(string: "https://ssku.shop")!
+//        URL(string: "http://localhost:8080")!
     }
     
     var path: String {
         switch self {
-        case .authSchoolLogin:
-            return "/auth/school"
+        case .healthCheck:
+            return "/"
+        case .join:
+            return "/members"
+        case .checkDuplicatedMember:
+            return "/members/check-duplicate"
+        case .withdraw:
+            return "/members/me"
         case .login:
             return "/login"
+        case .logout:
+            return "/logout"
+        case .reissueToken:
+            return "/reissue"
+        case .passwordReset:
+            return "/password-reset"
         case .mailSend:
             return "/mail/send"
         case .mailVerify:
             return "/mail/verify"
-        case .join:
-            return "/join"
-        case .passwordReset:
-            return "/password-reset"
-        case .checkDuplicatedMember:
-            return "/checkDuplicatedMember"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .authSchoolLogin:
+        case .healthCheck:
+            return .get
+        case .join:
             return .post
+        case .checkDuplicatedMember:
+            return .get
+        case .withdraw:
+            return .delete
         case .login:
             return .post
+        case .logout:
+            return .post
+        case .reissueToken:
+            return .post
+        case .passwordReset:
+            return .patch
         case .mailSend:
             return .post
         case .mailVerify:
-            return .post
-        case .join:
-            return .post
-        case .passwordReset:
-            return .post
-        case .checkDuplicatedMember:
             return .post
         }
     }
     
     var task: Moya.Task {
         switch self {
-        case .authSchoolLogin(let school, let studentId, let password):
-            let parameters: [String: Any] = ["school": school, "studentId": studentId, "password": password]
-            return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
-        case .login(let school, let studentId, let password):
-            let parameters: [String: Any] = ["school": school, "studentId": studentId, "password": password]
-            return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
+        case .healthCheck:
+            return .requestPlain
+        case .join(let studentId, let password, let username):
+            return .requestParameters(parameters: ["studentId": studentId, "password": password, "username": username], encoding: JSONEncoding.default)
+        case .checkDuplicatedMember(let studentId):
+            return .requestParameters(parameters: ["studentId" : studentId], encoding: URLEncoding.default)
+        case .withdraw:
+            return .requestPlain
+        case .login(let studentId, let password):
+            return .requestParameters(parameters: ["studentId": studentId, "password": password], encoding: JSONEncoding.default)
+        case .logout:
+            return .requestPlain
+        case .reissueToken:
+            return .requestPlain
+        case .passwordReset(let studentId, let newPassword):
+            return .requestParameters(parameters: ["studentId": studentId, "newPassword" : newPassword], encoding: JSONEncoding.default)
         case .mailSend(let email):
             return .requestParameters(parameters: ["email": email], encoding: JSONEncoding.default)
         case .mailVerify(let email, let authCode):
             return .requestParameters(parameters: ["email": email, "authCode": authCode], encoding: JSONEncoding.default)
-        case .join(let studentId, let password, let username, let school, let department):
-            return .requestParameters(parameters: ["studentId": studentId, "password": password, "username": username, "school": school, "department": department, "role": "STUDENT"], encoding: JSONEncoding.default)
-        case .passwordReset(let school, let studentId, let newPassword):
-            return .requestParameters(parameters: ["school" : school, "studentId" : studentId, "newPassword" : newPassword], encoding: JSONEncoding.default)
-        case .checkDuplicatedMember(let studentId, let school):
-            return .requestParameters(parameters: ["studentId" : studentId, "school" : school], encoding: JSONEncoding.default)
         }
     }
     
     var headers: [String : String]? {
         switch self {
-        case .authSchoolLogin:
+        case .healthCheck:
             return ["Content-type": "application/json"]
+        case .join:
+            return ["Content-type": "application/json"]
+        case .checkDuplicatedMember:
+            return ["Content-type": "application/json"]
+        case .withdraw:
+            return ["Authorization": "Bearer \(getToken() ?? "asd")"]
         case .login:
+            return ["Content-type": "application/json"]
+        case .logout:
+            return ["refresh": getRefreshToken() ?? "asd", "Content-type": "application/json"]
+        case .reissueToken:
+            return ["refresh": getRefreshToken() ?? "asd", "Content-type": "application/json"]
+        case .passwordReset:
             return ["Content-type": "application/json"]
         case .mailSend:
             return ["Content-type": "application/json"]
         case .mailVerify:
-            return ["Content-type": "application/json"]
-        case .join:
-            return ["Content-type": "application/json"]
-        case .passwordReset:
-            return ["Content-type": "application/json"]
-        case .checkDuplicatedMember:
             return ["Content-type": "application/json"]
         }
     }

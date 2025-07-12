@@ -8,133 +8,269 @@
 import Foundation
 import Moya
 
+// 응답확인하기
+//let rawString = String(data: response.data, encoding: .utf8)
+//print("서버 응답: \(rawString ?? "nil")")
+//print(response)
+
+// 변수 정리
 class TimetableViewModel: ObservableObject {
     
     
     private var provider: MoyaProvider<TimetableApi>!
-    var lectures: [Lecture] = []
+    
+    // 날짜로 학년도 정보 가져오기
+    var currentYearSemester: YearSemester = getCurrentYearSemester()
+    
+    // 시간표가 존재하는 학년도 정보
+    @Published var yearAndSemesters: [YearAndSemester] = []
+    
+    // 키워드로 검색된 강의들
+    @Published var searchLectures: [Lecture] = []
+    // 선택된 강의들
+    @Published var selectedLectures: [Lecture] = []
+    
+    // 사용중인 시간, published는 잘 모르겠다
+    @Published var usedTime = Array(repeating: Array(repeating: 0, count: 1440), count: 7)
+    
+    // 모든 학과 정보
+    var allDepartments: [Department] = []
+    
+    // 메인 시간표
+    @Published var mainTimetable: Timetable?
+    
+    @Published var timetableAboutYearAndSemester: [Timetable] = []
+    @Published var errorAlert: Bool = false
+    
+    @Published var savedTimetableId: Int64 = -1
+    
+    @Published var selectedYear = "";
+    @Published var selectedSemester = "";
     
     
-    private var generator = TimetableGenerator()
-    @Published var generatedTimetables: [[Lecture]] = []
-    
-    init() {
-        self.provider = MoyaProvider<TimetableApi>()
+    init(viewModel: AuthViewModel) {
+        let authPlugin = AuthPlugin(viewModel: viewModel)
+        self.provider = MoyaProvider<TimetableApi>(plugins: [authPlugin])
+        loadInitialYearSemester()
     }
     
-    func getAllTimetable() {
-        provider.request(.getAllLectures) { result in
+
+    func getYearAndSemester() {
+        provider.request(.getYearAndSemester) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let response):
-                    let rawString = String(data: response.data, encoding: .utf8)
-                    //                    print("서버 응답: \(rawString ?? "nil")")
-                    //                    print(response)
-                    if let apiResponse = try? response.map(ApiResponse<[Lecture]>.self), let lectures = apiResponse.content {
+                    if let apiResponse = try? response.map(ApiResponse<[YearAndSemester]>.self), let yearAndSemester = apiResponse.content {
+                        print("✅ getYearAndSemester매핑 성공")
                         
-                        print("getAllTimetable매핑 성공🚨")
-                        print(lectures.count);
-                        
-                        self.lectures = lectures
+                        self.yearAndSemesters = yearAndSemester
                     }
                     else {
-                        print("getAllTimetable매핑 실패🚨")
-                        //                        self.LogInFailAlert = true
+                        print("🚨 getYearAndSemester매핑 실패")
                     }
                 case .failure:
-                    print("getAllTimetable네트워크 요청 실패🚨")
+                    print("🚨 getYearAndSemester네트워크 요청 실패")
+                }
+            }
+        }
+    }
+    // 완료
+    func putTimetableLectures(timetableId: Int64, lectureIds: [Int64], completion: @escaping () -> Void) {
+        provider.request(.putTimetableLectures(timetableId: timetableId, lectureIds: lectureIds)) { result in
+            DispatchQueue.main.async {
+                if case .success(let response) = result,
+                   let apiResponse = try? response.map(ApiResponse<EmptyContent>.self),
+                   apiResponse.statusCode.uppercased() == "OK" {
+                    print("✅ putTimetableLectures 성공: \(apiResponse.message)")
+                    completion()
+                } else {
+                    print("❌ putTimetableLectures 실패 또는 매핑 실패")
+                }
+            }
+            
+        }
+    }
+    // 완료
+    func getTimetablesByYearAndSemester(year: String, semester: String, completion: @escaping () -> Void) {
+        provider.request(.getTimetablesByYearAndSemester(year: year, semester: semester)) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let response):
+                    if let apiResponse = try? response.map(ApiResponse<[Timetable]>.self), let timetable = apiResponse.content {
+                        print("✅ getTimetablesByYearAndSemester매핑 성공")
+                        self.timetableAboutYearAndSemester = timetable
+                        
+                        completion()
+                    }
+                    else {
+                        print("🚨 getTimetablesByYearAndSemester매핑 실패")
+                    }
+                case .failure:
+                    print("🚨 getTimetablesByYearAndSemester네트워크 요청 실패")
                 }
             }
         }
     }
     
-    
-    func generateTimetables(initialLecture: Lecture? = nil) {
-        generator.usedTime = Array(repeating: Array(repeating: false, count: 1440), count: 7) // 초기화
-        generator.makedTimetables = []
-        generator.cnt = 0
-        generator.totalLectures = self.lectures  // ✅ 강의 리스트 주입
-        
-        print("생성중")
-        
-        var selected: [Lecture] = []
-        var count = LectureCount(major: 0, culture: 0)
-        
-        
-        
-        // 초기 강의 설정 (옵션)
-        if let lecture = initialLecture {
-            selected.append(lecture)
-            generator.fillTime(lecture)
-            generator.addCount(lecture, &count)
-        }
-        
-        generator.generate(start: -1, selected: &selected, count: &count)
-        
-        // 뷰에서 사용 가능하도록 Published에 전달
-        DispatchQueue.main.async {
-            self.generatedTimetables = self.generator.makedTimetables
-            print(self.generatedTimetables.count)
+    // 완료
+    func getMainTimetableByYearAndSemester(year: String, semester: String) {
+        provider.request(.getMainTimetableByYearAndSemester(year: year, semester: semester)) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let response):
+                    guard let apiResponse = try? response.map(ApiResponse<Timetable?>.self) else {
+                        print("🚨 JSON 파싱 실패")
+                        self.mainTimetable = nil
+                        return
+                    }
+
+                    if let timetable = apiResponse.content {
+                        self.mainTimetable = timetable
+                        print("✅ 메인 시간표 로드 성공")
+                    } else {
+                        self.mainTimetable = nil
+                        print("ℹ️ 메인 시간표 없음 (content == nil)")
+                    }
+
+                case .failure(let error):
+                    print("🚨 네트워크 요청 실패: \(error.localizedDescription)")
+                    self.mainTimetable = nil
+                }
+            }
         }
     }
-    
-}
 
+    // 완료
+    func patchMainTimetable(timetableId: Int64, completion: @escaping () -> Void) {
+        provider.request(.patchMainTimetable(timetableId: timetableId)) { result in
+            DispatchQueue.main.async {
+                if case .success(let response) = result,
+                   let apiResponse = try? response.map(ApiResponse<EmptyContent>.self),
+                   apiResponse.statusCode.uppercased() == "OK" {
+                    print("✅ patchMainTimetable 성공: \(apiResponse.message)")
+                    completion()
+                } else {
+                    print("🚨 patchMainTimetable 실패 또는 매핑 실패")
+                }
+            }
+            
+        }
+    }
+    // 완료
+    func deleteTimetable(timetableId: Int64, completion: @escaping () -> Void) {
+        provider.request(.deleteTimetable(timetableId: timetableId)) { result in
+            DispatchQueue.main.async {
+                if case .success(let response) = result,
+                   let apiResponse = try? response.map(ApiResponse<EmptyContent>.self),
+                   apiResponse.statusCode.uppercased() == "OK" {
+                    print("✅ deleteTimetable 성공: \(apiResponse.message)")
+                    completion()
+                } else {
+                    print("🚨 deleteTimetable 실패 또는 매핑 실패")
+                }
+            }
+        }
+    }
 
-struct LectureCount {
-    var major: Int
-    var culture: Int
-}
-
-class TimetableGenerator {
-    var usedTime = Array(repeating: Array(repeating: false, count: 1440), count: 7)
-    var totalLectures: [Lecture] = []
-    var targetMajorCount = 5
-    var targetCultureCount = 1
-    var makedTimetables: [[Lecture]] = []
-    var cnt: Int = 0
-    
-    func generate(start: Int, selected: inout [Lecture], count: inout LectureCount) {
-        if count.major == targetMajorCount && count.culture == targetCultureCount {
-            cnt += 1
-            makedTimetables.append(selected)
+    // 완료
+    func searchLectures(keyword: String) {
+        if(keyword.isEmpty) {
+            searchLectures = []
             return
         }
+        provider.request(.searchLectures(keyword: keyword)) { result in
+            switch result {
+            case .success(let response):
+//                let rawString = String(data: response.data, encoding: .utf8)
+//                print("서버 응답: \(rawString ?? "nil")")
+//                print(response)
+                
+                if let apiResponse = try? response.map(ApiResponse<[Lecture]>.self), let searchLectures = apiResponse.content {
+                    print("✅ searchLectures매핑 성공")
+                    
+                    self.searchLectures = searchLectures
+                    
+                }
+                else {
+                    print("🚨 searchLectures매핑 실패")
+                }
+            case .failure:
+                print("🚨 searchLectures네트워크 요청 실패")
+            }
+        }
+    }
+
+    
+    
+    // 여기부터 네트워크 통신 아님
+    
+    func fillUsedTime(timeString: String) {
         
-        for i in (start + 1)..<totalLectures.count {
-            let lecture = totalLectures[i]
-            if canAddCode(selected, lecture) &&
-                canAddTime(lecture) &&
-                canAddCount(count, lecture) {
-                
-                selected.append(lecture)
-                fillTime(lecture)
-                addCount(lecture, &count)
-                
-                generate(start: i, selected: &selected, count: &count)
-                
-                selected.removeLast()
-                eraseTime(lecture)
-                removeCount(lecture, &count)
+        let dayMap: [String: Int] = ["월": 0, "화": 1, "수": 2, "목": 3, "금": 4, "토": 5, "일": 6]
+        let timeBlocks = timeString.split(separator: ",")
+        
+        for block in timeBlocks {
+            let daySymbol = String(block.prefix(1))  // 예: "월"
+            guard let dayIndex = dayMap[daySymbol] else { continue }
+            
+            let rangeString = block.dropFirst()  // "900-1015"
+            let parts = rangeString.split(separator: "-")
+            guard parts.count == 2,
+                  let start = Int(parts[0]),
+                  let end = Int(parts[1]) else { continue }
+            
+            let startMin = (start / 100) * 60 + (start % 100)
+            let endMin = (end / 100) * 60 + (end % 100)
+            
+            for minute in startMin..<endMin {
+                self.usedTime[dayIndex][minute] = 1
             }
         }
     }
     
-    func canAddCode(_ selected: [Lecture], _ lecture: Lecture) -> Bool {
-        return !selected.contains(where: { $0.code == lecture.code })
+    func emptyUsedTime(timeString: String) {
+        
+        let dayMap: [String: Int] = ["월": 0, "화": 1, "수": 2, "목": 3, "금": 4, "토": 5, "일": 6]
+        let timeBlocks = timeString.split(separator: ",")
+        
+        for block in timeBlocks {
+            let daySymbol = String(block.prefix(1))  // 예: "월"
+            guard let dayIndex = dayMap[daySymbol] else { continue }
+            
+            let rangeString = block.dropFirst()  // "900-1015"
+            let parts = rangeString.split(separator: "-")
+            guard parts.count == 2,
+                  let start = Int(parts[0]),
+                  let end = Int(parts[1]) else { continue }
+            
+            let startMin = (start / 100) * 60 + (start % 100)
+            let endMin = (end / 100) * 60 + (end % 100)
+            
+            for minute in startMin..<endMin {
+                self.usedTime[dayIndex][minute] = 0
+            }
+        }
     }
     
-    func canAddTime(_ lecture: Lecture) -> Bool {
-        for time in lecture.time.split(separator: ",") {
-            guard !time.isEmpty else { continue }
-            let day = dayToInt(time.first!)
-            let timeRange = String(time.dropFirst())
-            let parts = timeRange.split(separator: "-").map { Int($0)! }
-            let start = parts[0] % 100 + (parts[0] / 100) * 60
-            let end = parts[1] % 100 + (parts[1] / 100) * 60
+    func canAddLectureAboutTime(timeString: String) -> Bool {
+        let dayMap: [String: Int] = ["월": 0, "화": 1, "수": 2, "목": 3, "금": 4, "토": 5, "일": 6]
+        let timeBlocks = timeString.split(separator: ",")
+        
+        for block in timeBlocks {
+            let daySymbol = String(block.prefix(1))  // 예: "월"
+            guard let dayIndex = dayMap[daySymbol] else { continue }
             
-            for t in start..<end {
-                if usedTime[day][t] {
+            let rangeString = block.dropFirst()  // "900-1015"
+            let parts = rangeString.split(separator: "-")
+            guard parts.count == 2,
+                  let start = Int(parts[0]),
+                  let end = Int(parts[1]) else { continue }
+            
+            let startMin = (start / 100) * 60 + (start % 100)
+            let endMin = (end / 100) * 60 + (end % 100)
+            
+            for minute in startMin..<endMin {
+                if(self.usedTime[dayIndex][minute] == 1) {
                     return false
                 }
             }
@@ -142,70 +278,23 @@ class TimetableGenerator {
         return true
     }
     
-    func canAddCount(_ count: LectureCount, _ lecture: Lecture) -> Bool {
-        if lecture.department == "culture" {
-            return count.culture + 1 <= targetCultureCount
-        } else {
-            return count.major + 1 <= targetMajorCount
+    func loadInitialYearSemester() {
+            self.currentYearSemester = getCurrentYearSemester()
+        }
+    
+    // 강의들을 받아서 usedtime채우기
+    func fillUsedTimeAboutLecturesTime(lecturesTime: [String]) {
+        for lectureTime in lecturesTime {
+            fillUsedTime(timeString: lectureTime)
         }
     }
     
-    func fillTime(_ lecture: Lecture) {
-        for time in lecture.time.split(separator: ",") {
-            guard !time.isEmpty else { continue }
-            let day = dayToInt(time.first!)
-            let timeRange = String(time.dropFirst())
-            let parts = timeRange.split(separator: "-").map { Int($0)! }
-            let start = parts[0] % 100 + (parts[0] / 100) * 60
-            let end = parts[1] % 100 + (parts[1] / 100) * 60
-            
-            for t in start..<end {
-                usedTime[day][t] = true
-            }
-        }
-    }
-    
-    func eraseTime(_ lecture: Lecture) {
-        for time in lecture.time.split(separator: ",") {
-            guard !time.isEmpty else { continue }
-            let day = dayToInt(time.first!)
-            let timeRange = String(time.dropFirst())
-            let parts = timeRange.split(separator: "-").map { Int($0)! }
-            let start = parts[0] % 100 + (parts[0] / 100) * 60
-            let end = parts[1] % 100 + (parts[1] / 100) * 60
-            
-            for t in start..<end {
-                usedTime[day][t] = false
-            }
-        }
-    }
-    
-    func addCount(_ lecture: Lecture, _ count: inout LectureCount) {
-        if lecture.department == "culture" {
-            count.culture += 1
-        } else {
-            count.major += 1
-        }
-    }
-    
-    func removeCount(_ lecture: Lecture, _ count: inout LectureCount) {
-        if lecture.department == "culture" {
-            count.culture -= 1
-        } else {
-            count.major -= 1
-        }
-    }
-    
-    func dayToInt(_ day: Character) -> Int {
-        switch day {
-        case "월": return 0
-        case "화": return 1
-        case "수": return 2
-        case "목": return 3
-        case "금": return 4
-        case "토": return 5
-        case "일": return 6
-        default: fatalError("잘못된 요일 문자: \(day)")
-        }
-    }
 }
+
+
+
+struct LectureCount {
+    var major: Int
+    var culture: Int
+}
+

@@ -15,6 +15,7 @@ struct ContentView: View {
     
     var body: some View {
         
+        
         NavigationView {
             TabView(selection: $selectedTab) {
                 
@@ -25,18 +26,20 @@ struct ContentView: View {
                     }
                     .tag(Tab.home)
                 
-                TimetableView2()
+                TimetableView2(authViewModel: authViewModel)
                     .tabItem {
                         Image(systemName: "calendar")
                         Text("시간표")
                     }
+                    .environmentObject(authViewModel)
                     .tag(Tab.timeTable)
                 
-                FriendView()
+                FriendView(authViewModel: authViewModel)
                     .tabItem {
                         Image(systemName: "person.2.fill")
                         Text("친구관리")
                     }
+                    .environmentObject(authViewModel)
                     .tag(Tab.friend)
                 
                 SettingView()

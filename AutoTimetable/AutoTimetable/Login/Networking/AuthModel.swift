@@ -13,6 +13,7 @@ struct ApiResponse<T: Decodable>: Decodable {
     let content: T?
 }
 
+
 struct EmptyContent: Decodable {}
 
 
@@ -21,24 +22,9 @@ struct Token: Codable {
     var refresh: String
 }
 
-struct LoginResponse: Codable {
-    var statusCode: String
-    var message: String
-    var content: Token
-}
 
-struct School: Identifiable, Hashable {
-    let id = UUID()
-    let name: String
-}
 
-let schoolList = [
-    School(name: "성균관대학교"),
-    School(name: "서울대학교"),
-    School(name: "고려대학교"),
-    School(name: "연세대학교"),
-    School(name: "한양대학교")
-]
+
 
 
 

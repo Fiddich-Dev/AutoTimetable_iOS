@@ -12,6 +12,48 @@
 		3B5EC29A2DF1730E0086A469 /* ReactiveMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 3B5EC2992DF1730E0086A469 /* ReactiveMoya */; };
 		3B5EC29C2DF1730E0086A469 /* RxMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 3B5EC29B2DF1730E0086A469 /* RxMoya */; };
 		3B5EC2B02DF195F10086A469 /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 3B5EC2AF2DF195F10086A469 /* SwiftKeychainWrapper */; };
+		3B5EC3052E0C15480086A469 /* FriendApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2DA2E0C15480086A469 /* FriendApi.swift */; };
+		3B5EC3062E0C15480086A469 /* FriendModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2DB2E0C15480086A469 /* FriendModel.swift */; };
+		3B5EC3072E0C15480086A469 /* FriendViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2DC2E0C15480086A469 /* FriendViewModel.swift */; };
+		3B5EC3082E0C15480086A469 /* FriendSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2DE2E0C15480086A469 /* FriendSearchView.swift */; };
+		3B5EC3092E0C15480086A469 /* FriendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2DF2E0C15480086A469 /* FriendView.swift */; };
+		3B5EC30A2E0C15480086A469 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2E22E0C15480086A469 /* HomeView.swift */; };
+		3B5EC30B2E0C15480086A469 /* AuthAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2E42E0C15480086A469 /* AuthAPI.swift */; };
+		3B5EC30C2E0C15480086A469 /* AuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2E52E0C15480086A469 /* AuthModel.swift */; };
+		3B5EC30D2E0C15480086A469 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2E62E0C15480086A469 /* AuthViewModel.swift */; };
+		3B5EC30E2E0C15480086A469 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2E72E0C15480086A469 /* KeychainManager.swift */; };
+		3B5EC30F2E0C15480086A469 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2E92E0C15480086A469 /* LoginView.swift */; };
+		3B5EC3102E0C15480086A469 /* PasswordResetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2EA2E0C15480086A469 /* PasswordResetView.swift */; };
+		3B5EC3112E0C15480086A469 /* SchoolAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2EB2E0C15480086A469 /* SchoolAuthView.swift */; };
+		3B5EC3122E0C15480086A469 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2EC2E0C15480086A469 /* SignUpView.swift */; };
+		3B5EC3132E0C15480086A469 /* TermsAgreementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2ED2E0C15480086A469 /* TermsAgreementView.swift */; };
+		3B5EC3142E0C15480086A469 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2F02E0C15480086A469 /* SettingView.swift */; };
+		3B5EC3152E0C15480086A469 /* TimetableApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2F22E0C15480086A469 /* TimetableApi.swift */; };
+		3B5EC3162E0C15480086A469 /* TimetableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2F32E0C15480086A469 /* TimetableModel.swift */; };
+		3B5EC3172E0C15480086A469 /* TimetableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2F42E0C15480086A469 /* TimetableViewModel.swift */; };
+		3B5EC3182E0C15480086A469 /* AutoCreateTimetableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2F62E0C15480086A469 /* AutoCreateTimetableView.swift */; };
+		3B5EC3192E0C15480086A469 /* CreateTimetableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2F72E0C15480086A469 /* CreateTimetableView.swift */; };
+		3B5EC31A2E0C15480086A469 /* SelectExcludeTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2F82E0C15480086A469 /* SelectExcludeTimeView.swift */; };
+		3B5EC31B2E0C15480086A469 /* SelectLikeLecturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2F92E0C15480086A469 /* SelectLikeLecturesView.swift */; };
+		3B5EC31C2E0C15480086A469 /* TimetableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2FA2E0C15480086A469 /* TimetableView.swift */; };
+		3B5EC31E2E0C15480086A469 /* TimetableView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC2FC2E0C15480086A469 /* TimetableView2.swift */; };
+		3B5EC31F2E0C15480086A469 /* AutoTimetableApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC3012E0C15480086A469 /* AutoTimetableApp.swift */; };
+		3B5EC3202E0C15480086A469 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC3022E0C15480086A469 /* ContentView.swift */; };
+		3B5EC3212E0C15480086A469 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC3032E0C15480086A469 /* SwiftUIView.swift */; };
+		3B5EC3222E0C15480086A469 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3B5EC2FF2E0C15480086A469 /* Assets.xcassets */; };
+		3B5EC3262E0C20B40086A469 /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC3252E0C20B40086A469 /* SearchBarView.swift */; };
+		3B5EC3282E0D19610086A469 /* MakedTimetableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC3272E0D19610086A469 /* MakedTimetableView.swift */; };
+		3B5EC32A2E0D84510086A469 /* SavedYearAndSemesterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC3292E0D84510086A469 /* SavedYearAndSemesterView.swift */; };
+		3B5EC32C2E0E87890086A469 /* CustomCreateTimetableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC32B2E0E87890086A469 /* CustomCreateTimetableView.swift */; };
+		3B5EC32E2E0EEFCE0086A469 /* SavedTimetableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC32D2E0EEFCE0086A469 /* SavedTimetableView.swift */; };
+		3B5EC3302E0FFA280086A469 /* ActionCardButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC32F2E0FFA280086A469 /* ActionCardButton.swift */; };
+		3B5EC3322E1103710086A469 /* EveryTimeMappingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5EC3312E1103710086A469 /* EveryTimeMappingView.swift */; };
+		3BEB2B732E1785A000ABF7DD /* GenerateTimetableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEB2B722E1785A000ABF7DD /* GenerateTimetableViewModel.swift */; };
+		3BEB2B7A2E1C326C00ABF7DD /* AuthPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEB2B792E1C326C00ABF7DD /* AuthPlugin.swift */; };
+		3BEB2B7D2E1E26A500ABF7DD /* Modifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEB2B7C2E1E26A500ABF7DD /* Modifier.swift */; };
+		3BEB2B812E1E4A4200ABF7DD /* FriendListVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEB2B802E1E4A4200ABF7DD /* FriendListVIew.swift */; };
+		3BEB2B832E1EB9C600ABF7DD /* TimetableOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEB2B822E1EB9C600ABF7DD /* TimetableOptionView.swift */; };
+		3BEB2B852E1F9FFF00ABF7DD /* CompareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEB2B842E1F9FFF00ABF7DD /* CompareView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,17 +74,56 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3B5EC2DA2E0C15480086A469 /* FriendApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendApi.swift; sourceTree = "<group>"; };
+		3B5EC2DB2E0C15480086A469 /* FriendModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendModel.swift; sourceTree = "<group>"; };
+		3B5EC2DC2E0C15480086A469 /* FriendViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendViewModel.swift; sourceTree = "<group>"; };
+		3B5EC2DE2E0C15480086A469 /* FriendSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendSearchView.swift; sourceTree = "<group>"; };
+		3B5EC2DF2E0C15480086A469 /* FriendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendView.swift; sourceTree = "<group>"; };
+		3B5EC2E22E0C15480086A469 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		3B5EC2E42E0C15480086A469 /* AuthAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPI.swift; sourceTree = "<group>"; };
+		3B5EC2E52E0C15480086A469 /* AuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthModel.swift; sourceTree = "<group>"; };
+		3B5EC2E62E0C15480086A469 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		3B5EC2E72E0C15480086A469 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
+		3B5EC2E92E0C15480086A469 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		3B5EC2EA2E0C15480086A469 /* PasswordResetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetView.swift; sourceTree = "<group>"; };
+		3B5EC2EB2E0C15480086A469 /* SchoolAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchoolAuthView.swift; sourceTree = "<group>"; };
+		3B5EC2EC2E0C15480086A469 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
+		3B5EC2ED2E0C15480086A469 /* TermsAgreementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAgreementView.swift; sourceTree = "<group>"; };
+		3B5EC2F02E0C15480086A469 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
+		3B5EC2F22E0C15480086A469 /* TimetableApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimetableApi.swift; sourceTree = "<group>"; };
+		3B5EC2F32E0C15480086A469 /* TimetableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimetableModel.swift; sourceTree = "<group>"; };
+		3B5EC2F42E0C15480086A469 /* TimetableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimetableViewModel.swift; sourceTree = "<group>"; };
+		3B5EC2F62E0C15480086A469 /* AutoCreateTimetableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoCreateTimetableView.swift; sourceTree = "<group>"; };
+		3B5EC2F72E0C15480086A469 /* CreateTimetableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTimetableView.swift; sourceTree = "<group>"; };
+		3B5EC2F82E0C15480086A469 /* SelectExcludeTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectExcludeTimeView.swift; sourceTree = "<group>"; };
+		3B5EC2F92E0C15480086A469 /* SelectLikeLecturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectLikeLecturesView.swift; sourceTree = "<group>"; };
+		3B5EC2FA2E0C15480086A469 /* TimetableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimetableView.swift; sourceTree = "<group>"; };
+		3B5EC2FC2E0C15480086A469 /* TimetableView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimetableView2.swift; sourceTree = "<group>"; };
+		3B5EC2FF2E0C15480086A469 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3B5EC3002E0C15480086A469 /* AutoTimetable.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AutoTimetable.entitlements; sourceTree = "<group>"; };
+		3B5EC3012E0C15480086A469 /* AutoTimetableApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoTimetableApp.swift; sourceTree = "<group>"; };
+		3B5EC3022E0C15480086A469 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		3B5EC3032E0C15480086A469 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
+		3B5EC3252E0C20B40086A469 /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
+		3B5EC3272E0D19610086A469 /* MakedTimetableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakedTimetableView.swift; sourceTree = "<group>"; };
+		3B5EC3292E0D84510086A469 /* SavedYearAndSemesterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedYearAndSemesterView.swift; sourceTree = "<group>"; };
+		3B5EC32B2E0E87890086A469 /* CustomCreateTimetableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCreateTimetableView.swift; sourceTree = "<group>"; };
+		3B5EC32D2E0EEFCE0086A469 /* SavedTimetableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedTimetableView.swift; sourceTree = "<group>"; };
+		3B5EC32F2E0FFA280086A469 /* ActionCardButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCardButton.swift; sourceTree = "<group>"; };
+		3B5EC3312E1103710086A469 /* EveryTimeMappingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EveryTimeMappingView.swift; sourceTree = "<group>"; };
 		3B8D89E62DEEC37D00AE1944 /* AutoTimetable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoTimetable.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B8D89F42DEEC37E00AE1944 /* AutoTimetableTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AutoTimetableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B8D89FE2DEEC37E00AE1944 /* AutoTimetableUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AutoTimetableUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BEB2B722E1785A000ABF7DD /* GenerateTimetableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateTimetableViewModel.swift; sourceTree = "<group>"; };
+		3BEB2B792E1C326C00ABF7DD /* AuthPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPlugin.swift; sourceTree = "<group>"; };
+		3BEB2B7C2E1E26A500ABF7DD /* Modifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modifier.swift; sourceTree = "<group>"; };
+		3BEB2B802E1E4A4200ABF7DD /* FriendListVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendListVIew.swift; sourceTree = "<group>"; };
+		3BEB2B822E1EB9C600ABF7DD /* TimetableOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimetableOptionView.swift; sourceTree = "<group>"; };
+		3BEB2B842E1F9FFF00ABF7DD /* CompareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareView.swift; sourceTree = "<group>"; };
+		3BEB2B862E22540200ABF7DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		3B8D89E82DEEC37D00AE1944 /* AutoTimetable */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = AutoTimetable;
-			sourceTree = "<group>";
-		};
 		3B8D89F72DEEC37E00AE1944 /* AutoTimetableTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = AutoTimetableTests;
@@ -85,10 +166,153 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3B5EC2DD2E0C15480086A469 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				3B5EC2DA2E0C15480086A469 /* FriendApi.swift */,
+				3B5EC2DB2E0C15480086A469 /* FriendModel.swift */,
+				3B5EC2DC2E0C15480086A469 /* FriendViewModel.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		3B5EC2E02E0C15480086A469 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3B5EC2DF2E0C15480086A469 /* FriendView.swift */,
+				3BEB2B802E1E4A4200ABF7DD /* FriendListVIew.swift */,
+				3B5EC2DE2E0C15480086A469 /* FriendSearchView.swift */,
+				3BEB2B842E1F9FFF00ABF7DD /* CompareView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		3B5EC2E12E0C15480086A469 /* Friend */ = {
+			isa = PBXGroup;
+			children = (
+				3B5EC2DD2E0C15480086A469 /* Networking */,
+				3B5EC2E02E0C15480086A469 /* View */,
+			);
+			path = Friend;
+			sourceTree = "<group>";
+		};
+		3B5EC2E32E0C15480086A469 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				3B5EC2E22E0C15480086A469 /* HomeView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		3B5EC2E82E0C15480086A469 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				3B5EC2E42E0C15480086A469 /* AuthAPI.swift */,
+				3B5EC2E52E0C15480086A469 /* AuthModel.swift */,
+				3B5EC2E62E0C15480086A469 /* AuthViewModel.swift */,
+				3B5EC2E72E0C15480086A469 /* KeychainManager.swift */,
+				3BEB2B792E1C326C00ABF7DD /* AuthPlugin.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		3B5EC2EE2E0C15480086A469 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3B5EC2E92E0C15480086A469 /* LoginView.swift */,
+				3B5EC2EA2E0C15480086A469 /* PasswordResetView.swift */,
+				3B5EC2EC2E0C15480086A469 /* SignUpView.swift */,
+				3B5EC2EB2E0C15480086A469 /* SchoolAuthView.swift */,
+				3B5EC2ED2E0C15480086A469 /* TermsAgreementView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		3B5EC2EF2E0C15480086A469 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				3BEB2B7B2E1E268F00ABF7DD /* Component */,
+				3B5EC2E82E0C15480086A469 /* Networking */,
+				3B5EC2EE2E0C15480086A469 /* View */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		3B5EC2F12E0C15480086A469 /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				3B5EC2F02E0C15480086A469 /* SettingView.swift */,
+			);
+			path = Setting;
+			sourceTree = "<group>";
+		};
+		3B5EC2F52E0C15480086A469 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				3B5EC2F22E0C15480086A469 /* TimetableApi.swift */,
+				3B5EC2F32E0C15480086A469 /* TimetableModel.swift */,
+				3B5EC2F42E0C15480086A469 /* TimetableViewModel.swift */,
+				3BEB2B722E1785A000ABF7DD /* GenerateTimetableViewModel.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		3B5EC2FD2E0C15480086A469 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3BEB2B782E1794A600ABF7DD /* everytime */,
+				3BEB2B772E178E7E00ABF7DD /* custom */,
+				3BEB2B762E178C9E00ABF7DD /* auto */,
+				3B5EC2FC2E0C15480086A469 /* TimetableView2.swift */,
+				3B5EC3292E0D84510086A469 /* SavedYearAndSemesterView.swift */,
+				3B5EC32D2E0EEFCE0086A469 /* SavedTimetableView.swift */,
+				3B5EC2F72E0C15480086A469 /* CreateTimetableView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		3B5EC2FE2E0C15480086A469 /* Timetable */ = {
+			isa = PBXGroup;
+			children = (
+				3B5EC3242E0C209B0086A469 /* Component */,
+				3B5EC2F52E0C15480086A469 /* Networking */,
+				3B5EC2FD2E0C15480086A469 /* View */,
+			);
+			path = Timetable;
+			sourceTree = "<group>";
+		};
+		3B5EC3042E0C15480086A469 /* AutoTimetable */ = {
+			isa = PBXGroup;
+			children = (
+				3BEB2B862E22540200ABF7DD /* Info.plist */,
+				3B5EC2E12E0C15480086A469 /* Friend */,
+				3B5EC2E32E0C15480086A469 /* Home */,
+				3B5EC2EF2E0C15480086A469 /* Login */,
+				3B5EC2F12E0C15480086A469 /* Setting */,
+				3B5EC2FE2E0C15480086A469 /* Timetable */,
+				3B5EC2FF2E0C15480086A469 /* Assets.xcassets */,
+				3B5EC3002E0C15480086A469 /* AutoTimetable.entitlements */,
+				3B5EC3012E0C15480086A469 /* AutoTimetableApp.swift */,
+				3B5EC3022E0C15480086A469 /* ContentView.swift */,
+				3B5EC3032E0C15480086A469 /* SwiftUIView.swift */,
+			);
+			path = AutoTimetable;
+			sourceTree = "<group>";
+		};
+		3B5EC3242E0C209B0086A469 /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				3B5EC2FA2E0C15480086A469 /* TimetableView.swift */,
+				3B5EC3252E0C20B40086A469 /* SearchBarView.swift */,
+				3B5EC32F2E0FFA280086A469 /* ActionCardButton.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
 		3B8D89DD2DEEC37C00AE1944 = {
 			isa = PBXGroup;
 			children = (
-				3B8D89E82DEEC37D00AE1944 /* AutoTimetable */,
+				3B5EC3042E0C15480086A469 /* AutoTimetable */,
 				3B8D89F72DEEC37E00AE1944 /* AutoTimetableTests */,
 				3B8D8A012DEEC37E00AE1944 /* AutoTimetableUITests */,
 				3B8D89E72DEEC37D00AE1944 /* Products */,
@@ -105,6 +329,42 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		3BEB2B762E178C9E00ABF7DD /* auto */ = {
+			isa = PBXGroup;
+			children = (
+				3B5EC2F62E0C15480086A469 /* AutoCreateTimetableView.swift */,
+				3B5EC2F92E0C15480086A469 /* SelectLikeLecturesView.swift */,
+				3B5EC2F82E0C15480086A469 /* SelectExcludeTimeView.swift */,
+				3BEB2B822E1EB9C600ABF7DD /* TimetableOptionView.swift */,
+				3B5EC3272E0D19610086A469 /* MakedTimetableView.swift */,
+			);
+			path = auto;
+			sourceTree = "<group>";
+		};
+		3BEB2B772E178E7E00ABF7DD /* custom */ = {
+			isa = PBXGroup;
+			children = (
+				3B5EC32B2E0E87890086A469 /* CustomCreateTimetableView.swift */,
+			);
+			path = custom;
+			sourceTree = "<group>";
+		};
+		3BEB2B782E1794A600ABF7DD /* everytime */ = {
+			isa = PBXGroup;
+			children = (
+				3B5EC3312E1103710086A469 /* EveryTimeMappingView.swift */,
+			);
+			path = everytime;
+			sourceTree = "<group>";
+		};
+		3BEB2B7B2E1E268F00ABF7DD /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				3BEB2B7C2E1E26A500ABF7DD /* Modifier.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -119,9 +379,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				3B8D89E82DEEC37D00AE1944 /* AutoTimetable */,
 			);
 			name = AutoTimetable;
 			packageProductDependencies = (
@@ -234,6 +491,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B5EC3222E0C15480086A469 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,6 +516,47 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B5EC3322E1103710086A469 /* EveryTimeMappingView.swift in Sources */,
+				3B5EC32A2E0D84510086A469 /* SavedYearAndSemesterView.swift in Sources */,
+				3B5EC3052E0C15480086A469 /* FriendApi.swift in Sources */,
+				3B5EC3062E0C15480086A469 /* FriendModel.swift in Sources */,
+				3BEB2B7D2E1E26A500ABF7DD /* Modifier.swift in Sources */,
+				3B5EC3072E0C15480086A469 /* FriendViewModel.swift in Sources */,
+				3B5EC3082E0C15480086A469 /* FriendSearchView.swift in Sources */,
+				3BEB2B832E1EB9C600ABF7DD /* TimetableOptionView.swift in Sources */,
+				3B5EC3092E0C15480086A469 /* FriendView.swift in Sources */,
+				3B5EC30A2E0C15480086A469 /* HomeView.swift in Sources */,
+				3B5EC30B2E0C15480086A469 /* AuthAPI.swift in Sources */,
+				3B5EC30C2E0C15480086A469 /* AuthModel.swift in Sources */,
+				3B5EC30D2E0C15480086A469 /* AuthViewModel.swift in Sources */,
+				3B5EC3282E0D19610086A469 /* MakedTimetableView.swift in Sources */,
+				3B5EC30E2E0C15480086A469 /* KeychainManager.swift in Sources */,
+				3BEB2B852E1F9FFF00ABF7DD /* CompareView.swift in Sources */,
+				3B5EC3262E0C20B40086A469 /* SearchBarView.swift in Sources */,
+				3B5EC30F2E0C15480086A469 /* LoginView.swift in Sources */,
+				3B5EC3102E0C15480086A469 /* PasswordResetView.swift in Sources */,
+				3B5EC3112E0C15480086A469 /* SchoolAuthView.swift in Sources */,
+				3B5EC3122E0C15480086A469 /* SignUpView.swift in Sources */,
+				3B5EC3302E0FFA280086A469 /* ActionCardButton.swift in Sources */,
+				3BEB2B812E1E4A4200ABF7DD /* FriendListVIew.swift in Sources */,
+				3B5EC3132E0C15480086A469 /* TermsAgreementView.swift in Sources */,
+				3B5EC3142E0C15480086A469 /* SettingView.swift in Sources */,
+				3B5EC3152E0C15480086A469 /* TimetableApi.swift in Sources */,
+				3B5EC3162E0C15480086A469 /* TimetableModel.swift in Sources */,
+				3B5EC32E2E0EEFCE0086A469 /* SavedTimetableView.swift in Sources */,
+				3B5EC3172E0C15480086A469 /* TimetableViewModel.swift in Sources */,
+				3B5EC3182E0C15480086A469 /* AutoCreateTimetableView.swift in Sources */,
+				3BEB2B732E1785A000ABF7DD /* GenerateTimetableViewModel.swift in Sources */,
+				3B5EC3192E0C15480086A469 /* CreateTimetableView.swift in Sources */,
+				3B5EC31A2E0C15480086A469 /* SelectExcludeTimeView.swift in Sources */,
+				3B5EC31B2E0C15480086A469 /* SelectLikeLecturesView.swift in Sources */,
+				3B5EC31C2E0C15480086A469 /* TimetableView.swift in Sources */,
+				3B5EC32C2E0E87890086A469 /* CustomCreateTimetableView.swift in Sources */,
+				3B5EC31E2E0C15480086A469 /* TimetableView2.swift in Sources */,
+				3B5EC31F2E0C15480086A469 /* AutoTimetableApp.swift in Sources */,
+				3BEB2B7A2E1C326C00ABF7DD /* AuthPlugin.swift in Sources */,
+				3B5EC3202E0C15480086A469 /* ContentView.swift in Sources */,
+				3B5EC3212E0C15480086A469 /* SwiftUIView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -420,6 +719,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AutoTimetable/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -460,6 +760,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AutoTimetable/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

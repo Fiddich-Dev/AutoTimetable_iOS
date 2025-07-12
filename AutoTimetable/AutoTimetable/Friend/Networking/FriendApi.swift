@@ -11,12 +11,14 @@ import Moya
 enum FriendApi {
     case getMyFriends
     case findPendingResponse
+    case sendFriendRequest(receiverId: Int64)
     case acceptFriendRequest(requesterId: Int64)
     case rejectFriendRequest(requesterId: Int64)
     case deleteFriend(friendId: Int64)
-    case searchFriend(school: String, studentId: String)
-    case sendFriendRequest(receiverId: Int64)
+    case searchFriend(studentId: String)
     
+    case compareLectureWithFriend(year: String, semester: String, memberIds: [Int64])
+    case compareTimeWithFriend(year: String, semester: String, memberIds: [Int64])
 }
 
 
@@ -24,25 +26,30 @@ extension FriendApi: TargetType {
     
     
     public var baseURL: URL {
-        URL(string: "http://localhost:8080")!
+        URL(string: "https://ssku.shop")!
+//        URL(string: "http://localhost:8080")!
     }
     
     public var path: String {
         switch self {
         case .getMyFriends:
-            return "/friend/getMyFriends"
+            return "/friends"
         case .findPendingResponse:
-            return "/friend/findPendingResponse"
-        case .acceptFriendRequest:
-            return "/friend/acceptFriendRequest"
-        case .rejectFriendRequest:
-            return "/friend/rejectFriendRequest"
-        case .deleteFriend:
-            return "/friend/deleteFriend"
-        case .searchFriend:
-            return "/friend/searchMemberByStudentId"
+            return "/friends/pending/responses"
         case .sendFriendRequest:
-            return "/friend/sendFriendRequest"
+            return "/friends/request"
+        case .acceptFriendRequest:
+            return "/friends/accept"
+        case .rejectFriendRequest:
+            return "/friends/request"
+        case .deleteFriend(let friendId):
+            return "/friends/\(friendId)"
+        case .searchFriend:
+            return "/friends/search"
+        case .compareLectureWithFriend:
+            return "/timetables/compare-lecture"
+        case .compareTimeWithFriend:
+            return "/timetables/compare-time"
         }
     }
     
@@ -52,6 +59,8 @@ extension FriendApi: TargetType {
             return .get
         case .findPendingResponse:
             return .get
+        case .sendFriendRequest:
+            return .post
         case .acceptFriendRequest:
             return .post
         case .rejectFriendRequest:
@@ -60,7 +69,9 @@ extension FriendApi: TargetType {
             return .delete
         case .searchFriend:
             return .get
-        case .sendFriendRequest:
+        case .compareLectureWithFriend:
+            return .post
+        case .compareTimeWithFriend:
             return .post
         }
     }
@@ -71,16 +82,21 @@ extension FriendApi: TargetType {
             return .requestPlain
         case .findPendingResponse:
             return .requestPlain
+        case .sendFriendRequest(let receiverId):
+            return .requestParameters(parameters: ["memberId": receiverId], encoding: JSONEncoding.default)
         case .acceptFriendRequest(let requesterId):
-            return .requestParameters(parameters: ["requesterId": requesterId], encoding: JSONEncoding.default)
+            return .requestParameters(parameters: ["memberId": requesterId], encoding: JSONEncoding.default)
         case .rejectFriendRequest(let requesterId):
             return .requestParameters(parameters: ["requesterId": requesterId], encoding: URLEncoding.default)
-        case .deleteFriend(let friendId):
-            return .requestParameters(parameters: ["friendId": friendId], encoding: URLEncoding.default)
-        case .searchFriend(let school, let studentId):
-            return .requestParameters(parameters: ["school": school, "studentId": studentId], encoding: URLEncoding.default)
-        case .sendFriendRequest(let receiverId):
-            return .requestParameters(parameters: ["receiverId": receiverId], encoding: JSONEncoding.default)
+        case .deleteFriend:
+            return .requestPlain
+        case .searchFriend(let studentId):
+            return .requestParameters(parameters: ["keyword": studentId], encoding: URLEncoding.default)
+        
+        case .compareLectureWithFriend(let year, let semester, let memberIds):
+            return .requestParameters(parameters: ["year": year, "semester": semester, "memberIds": memberIds], encoding: JSONEncoding.default)
+        case .compareTimeWithFriend(year: let year, semester: let semester, memberIds: let memberIds):
+            return .requestParameters(parameters: ["year": year, "semester": semester, "memberIds": memberIds], encoding: JSONEncoding.default)
         }
     }
     
@@ -90,6 +106,8 @@ extension FriendApi: TargetType {
             return ["Authorization": "Bearer \(getToken() ?? "asd")"]
         case .findPendingResponse:
             return ["Authorization": "Bearer \(getToken() ?? "asd")"]
+        case .sendFriendRequest:
+            return ["Authorization": "Bearer \(getToken() ?? "asd")"]
         case .acceptFriendRequest:
             return ["Authorization": "Bearer \(getToken() ?? "asd")"]
         case .rejectFriendRequest:
@@ -98,7 +116,10 @@ extension FriendApi: TargetType {
             return ["Authorization": "Bearer \(getToken() ?? "asd")"]
         case .searchFriend:
             return ["Authorization": "Bearer \(getToken() ?? "asd")"]
-        case .sendFriendRequest:
+        
+        case .compareLectureWithFriend:
+            return ["Authorization": "Bearer \(getToken() ?? "asd")"]
+        case .compareTimeWithFriend:
             return ["Authorization": "Bearer \(getToken() ?? "asd")"]
         }
     }
