@@ -77,8 +77,6 @@ struct PendingListView: View {
                     Spacer()
                     
                     Button(action: {
-                        
-                        
                         friendViewModel.acceptFriendRequest(requesterId: pendingFriend.id) {
                             friendViewModel.getMyFriends()
                             friendViewModel.findPendingResponse()
@@ -94,13 +92,9 @@ struct PendingListView: View {
                             )
                     })
                     
-                    
                     Button(action: {
-                        
                         showAlert = true
                         deleteId = pendingFriend.id
-                        
-                        
                     }, label: {
                         Text("삭제")
                             .padding(.vertical, 8)

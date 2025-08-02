@@ -38,8 +38,8 @@ struct SelectExcludeTimeView: View {
                 }
                 .simultaneousGesture(TapGesture().onEnded {
                     
-                    var generateTimetableOption = GenerateTimetableOption(year: "2025",
-                                                                          semester: "2",
+                    var generateTimetableOption = GenerateTimetableOption(year: viewModel.currentYear,
+                                                                          semester: viewModel.currentSemester,
                                                                           targetMajorCnt: viewModel.targetMajorCnt,
                                                                           targetCultureCnt: viewModel.targetCultureCnt,
                                                                           likeOfficialLectureCodeSection: viewModel.selectedLikeLectures.map { $0.codeSection },

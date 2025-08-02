@@ -56,8 +56,12 @@ class TimetableViewModel: ObservableObject {
     
     
     func getYearAndSemester() {
+        self.isLoading = true
         provider.request(.getYearAndSemester) { result in
             DispatchQueue.main.async {
+                
+                defer { self.isLoading = false }
+                
                 switch result {
                 case .success(let response):
                     if let apiResponse = try? response.map(ApiResponse<[YearAndSemester]>.self), let yearAndSemester = apiResponse.content {
@@ -76,8 +80,12 @@ class TimetableViewModel: ObservableObject {
     
     
     func putTimetableLectures(timetableId: Int64, lectures: [Lecture], completion: @escaping () -> Void) {
+        self.isLoading = true
         provider.request(.putTimetableLectures(timetableId: timetableId, lectures: lectures)) { result in
             DispatchQueue.main.async {
+                
+                defer { self.isLoading = false }
+                
                 if case .success(let response) = result,
                    let apiResponse = try? response.map(ApiResponse<EmptyContent>.self),
                    apiResponse.statusCode.uppercased() == "OK" {
@@ -93,8 +101,12 @@ class TimetableViewModel: ObservableObject {
     
     
     func getTimetablesByYearAndSemester(year: String, semester: String, completion: @escaping () -> Void) {
+        self.isLoading = true
         provider.request(.getTimetablesByYearAndSemester(year: year, semester: semester)) { result in
             DispatchQueue.main.async {
+                
+                defer { self.isLoading = false }
+                
                 switch result {
                 case .success(let response):
                     
@@ -120,9 +132,7 @@ class TimetableViewModel: ObservableObject {
     
     // 완료
     func getMainTimetableByYearAndSemester(year: String, semester: String, completion: @escaping () -> Void) {
-        
         self.isLoading = true
-        
         provider.request(.getMainTimetableByYearAndSemester(year: year, semester: semester)) { result in
             DispatchQueue.main.async {
                 
@@ -160,8 +170,12 @@ class TimetableViewModel: ObservableObject {
 
     // 완료
     func patchMainTimetable(timetableId: Int64, completion: @escaping () -> Void) {
+        self.isLoading = true
         provider.request(.patchMainTimetable(timetableId: timetableId)) { result in
             DispatchQueue.main.async {
+                
+                defer { self.isLoading = false }
+                
                 if case .success(let response) = result,
                    let apiResponse = try? response.map(ApiResponse<EmptyContent>.self),
                    apiResponse.statusCode.uppercased() == "OK" {
@@ -176,8 +190,12 @@ class TimetableViewModel: ObservableObject {
     }
     // 완료
     func deleteTimetable(timetableId: Int64, completion: @escaping () -> Void) {
+        self.isLoading = true
         provider.request(.deleteTimetable(timetableId: timetableId)) { result in
             DispatchQueue.main.async {
+                
+                defer { self.isLoading = false }
+                
                 if case .success(let response) = result,
                    let apiResponse = try? response.map(ApiResponse<EmptyContent>.self),
                    apiResponse.statusCode.uppercased() == "OK" {

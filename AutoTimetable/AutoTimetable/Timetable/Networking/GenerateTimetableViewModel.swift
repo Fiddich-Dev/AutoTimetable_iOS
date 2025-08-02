@@ -14,6 +14,10 @@ class GenerateTimetableViewModel: ObservableObject {
     // 에브리타임에서 가져온 시간표, 변경안됨
     @Published var mappedTimetables: [CreatedTimetable] = []
     
+    // 현재 학년도
+        var currentYear = ""
+        var currentSemester = ""
+    
     
     // MARK: 수동생성에 필요한 정보들
     @Published var customTimetableLectures: [Lecture] = []
@@ -63,12 +67,18 @@ class GenerateTimetableViewModel: ObservableObject {
     private var provider: MoyaProvider<TimetableApi>!
 
     
-    init() {
-        self.provider = MoyaProvider<TimetableApi>()
+    init(viewModel: AuthViewModel) {
+        loadCurrentSemester()
+        let authPlugin = AuthPlugin(viewModel: viewModel)
+        self.provider = MoyaProvider<TimetableApi>(plugins: [authPlugin])
     }
     
     func fetchEverytimeCategories(year: String, semester: String) {
+        self.isLoading = true
         provider.request(.getEverytimeCategories(year: year, semester: semester)) { result in
+            
+            defer { self.isLoading = false }
+            
             switch result {
             case .success(let response):                
                 if let apiResponse = try? response.map(ApiResponse<[Category]>.self), let allCategories = apiResponse.content {
@@ -87,7 +97,7 @@ class GenerateTimetableViewModel: ObservableObject {
     // -----페이징-------
     
     func searchEverytimeLectures(type: String, keyword: String, year: String, semester: String, page: Int, size: Int) {
-        
+        self.isSearchLectureLoading = true
         provider.request(.searchEverytimeLectures(type: type, keyword: keyword, year: year, semester: semester, page: page, size: size)) { result in
             DispatchQueue.main.async {
                 
@@ -127,8 +137,12 @@ class GenerateTimetableViewModel: ObservableObject {
 
     
     func generateTimetable(generateTimetableOption: GenerateTimetableOption) {
+        self.isLoading = true
         provider.request(.generateTimetable(generateTimetableOption: generateTimetableOption)) { result in
             DispatchQueue.main.async {
+                
+                defer { self.isLoading = false }
+                
                 switch result {
                 case .success(let response):
                     
@@ -163,8 +177,12 @@ class GenerateTimetableViewModel: ObservableObject {
     }
 
     func saveTimetable(createdTimetable: CreatedTimetable, completion: @escaping () -> Void) {
+        self.isLoading = true
         provider.request(.saveTimetable(createdTimetable: createdTimetable)) { result in
             DispatchQueue.main.async {
+                
+                defer { self.isLoading = false }
+                
                 if case .success(let response) = result,
                    let apiResponse = try? response.map(ApiResponse<Int64>.self),
                    apiResponse.statusCode.uppercased() == "OK", let savedTimetableId = apiResponse.content {
@@ -180,8 +198,12 @@ class GenerateTimetableViewModel: ObservableObject {
     
     // 완료
     func getAllEverytimetable(url: String) {
+        self.isLoading = true
         provider.request(.getAllEverytimetable(url: url)) { result in
             DispatchQueue.main.async {
+                
+                defer { self.isLoading = false }
+                
                 switch result {
                 case .success(let response):
                     
@@ -282,6 +304,28 @@ class GenerateTimetableViewModel: ObservableObject {
             }
         }
         return true
+    }
+    
+    // MARK: 현재 학년도 가져오기
+    private func loadCurrentSemester() {
+        let date = Date()
+        let calendar = Calendar.current
+        let year = calendar.component(.year, from: date)
+        let month = calendar.component(.month, from: date)
+        
+        self.currentYear = String(year)
+
+        switch month {
+        case 1...6:
+            self.currentSemester = "1"
+        case 7...12:
+            self.currentSemester = "2"
+        default:
+            self.currentSemester = "99"
+        }
+        
+        print("\(self.currentYear)년 \(self.currentSemester)학기")
+        
     }
     
 }

@@ -171,7 +171,7 @@ struct LectureSearchBarWithoutUsedtime: View {
                                             // 페이지를 증가시킨다
                                             viewModel.searchLecturePage += 1
                                             // 증가시킨 페이지로 추가 조회
-                                            viewModel.searchEverytimeLectures(type: searchType, keyword: searchText, year: "2025", semester: "2", page: viewModel.searchLecturePage, size: 50)
+                                            viewModel.searchEverytimeLectures(type: searchType, keyword: searchText, year: viewModel.currentYear, semester: viewModel.currentSemester, page: viewModel.searchLecturePage, size: 50)
                                         }
                                     }
                                 }
@@ -211,8 +211,8 @@ struct LectureSearchBarWithoutUsedtime: View {
                         viewModel.searchEverytimeLectures(
                             type: searchType,
                             keyword: searchText,
-                            year: "2025",
-                            semester: "2",
+                            year: viewModel.currentYear,
+                            semester: viewModel.currentSemester,
                             page: 0,
                             size: 50
                         )
@@ -322,7 +322,7 @@ struct LectureSearchBarWithUsedtime: View {
                                             // 페이지를 증가시킨다
                                             viewModel.searchLecturePage += 1
                                             // 증가시킨 페이지로 추가 조회
-                                            viewModel.searchEverytimeLectures(type: searchType, keyword: searchText, year: "2025", semester: "2", page: viewModel.searchLecturePage, size: 50)
+                                            viewModel.searchEverytimeLectures(type: searchType, keyword: searchText, year: viewModel.currentYear, semester: viewModel.currentSemester, page: viewModel.searchLecturePage, size: 50)
                                         }
                                     }
                                 }
@@ -364,8 +364,8 @@ struct LectureSearchBarWithUsedtime: View {
                         viewModel.searchEverytimeLectures(
                             type: searchType,
                             keyword: searchText,
-                            year: "2025",
-                            semester: "2",
+                            year: viewModel.currentYear,
+                            semester: viewModel.currentSemester,
                             page: 0,
                             size: 50
                         )

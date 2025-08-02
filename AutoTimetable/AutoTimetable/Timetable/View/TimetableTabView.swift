@@ -11,7 +11,7 @@ import Combine
 struct TimetableTabView: View {
     
     @StateObject var timetableViewModel: TimetableViewModel
-    @StateObject var generateTimetableViewModel: GenerateTimetableViewModel = GenerateTimetableViewModel()
+    @StateObject var generateTimetableViewModel: GenerateTimetableViewModel
     
     // 저장된 시간표 풀스크린
     @State private var savedTimetableFullScreen = false
@@ -22,6 +22,7 @@ struct TimetableTabView: View {
     
     init(authViewModel: AuthViewModel) {
         _timetableViewModel = StateObject(wrappedValue: TimetableViewModel(viewModel: authViewModel))
+        _generateTimetableViewModel = StateObject(wrappedValue: GenerateTimetableViewModel(viewModel: authViewModel))
     }
     
     var body: some View {
@@ -67,7 +68,7 @@ struct TimetableTabView: View {
                                 // 취소버튼
                                 Button(action: {
                                     canEdit = false
-                                    timetableViewModel.getMainTimetableByYearAndSemester(year: "2025", semester: "2"){}
+                                    timetableViewModel.getMainTimetableByYearAndSemester(year: timetableViewModel.currentYear, semester: timetableViewModel.currentSemester){}
                                 }, label: {
                                     Text("취소")
                                 })
@@ -80,7 +81,7 @@ struct TimetableTabView: View {
                                         timetableId: mainTimetable.id,
                                         lectures: mainTimetable.lectures
                                     ) {
-                                        timetableViewModel.getMainTimetableByYearAndSemester(year: "2025", semester: "2"){}
+                                        timetableViewModel.getMainTimetableByYearAndSemester(year: timetableViewModel.currentYear, semester: timetableViewModel.currentSemester){}
                                     }
                                 }, label: {
                                     Text("완료")
@@ -141,23 +142,23 @@ struct TimetableTabView: View {
                 }
                 .onAppear {
                     print("생김")
-                    let year = timetableViewModel.currentYearSemester.year
-                    let semester = timetableViewModel.currentYearSemester.semester
+                    let year = timetableViewModel.currentYear
+                    let semester = timetableViewModel.currentSemester
                     timetableViewModel.getMainTimetableByYearAndSemester(year: year, semester: semester){}
                 }
                 // 풀스크린 닫히면 메인시간표 새로고침
                 .onChange(of: savedTimetableFullScreen) { isPresented in
                     if !isPresented {
-                        let year = timetableViewModel.currentYearSemester.year
-                        let semester = timetableViewModel.currentYearSemester.semester
+                        let year = timetableViewModel.currentYear
+                        let semester = timetableViewModel.currentSemester
                         timetableViewModel.getMainTimetableByYearAndSemester(year: year, semester: semester){}
                     }
                 }
                 // 풀스크린 닫히면 메인시간표 새로고침
                 .onChange(of: makeTimetableFullScreen) { isPresented in
                     if !isPresented {
-                        let year = timetableViewModel.currentYearSemester.year
-                        let semester = timetableViewModel.currentYearSemester.semester
+                        let year = timetableViewModel.currentYear
+                        let semester = timetableViewModel.currentSemester
                         timetableViewModel.getMainTimetableByYearAndSemester(year: year, semester: semester){}
                     }
                 }

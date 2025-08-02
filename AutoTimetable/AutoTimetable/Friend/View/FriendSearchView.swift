@@ -20,18 +20,13 @@ struct FriendSearchView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text("친구 찾기")
-                    .font(.largeTitle)
-                
                 Text("학번")
                     .font(.title2)
                 
                 HStack {
-                    
                     TextField("학번만 입력", text: $studentId)
                         .focused($isFocused, equals: .id)
                         .modifier(MyTextFieldModifier(isFocused: isFocused == .id))
-                        .padding(.bottom, 8)
                         .keyboardType(.numberPad)
                     
                     Button(action: {
@@ -40,10 +35,15 @@ struct FriendSearchView: View {
                     }, label: {
                         Text("검색")
                     })
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(studentId.count < 4 ? Color.gray.opacity(0.5) : Color.blue, lineWidth: 1)
+                    )
+                    .disabled(studentId.count < 4)
                 }
                 
                 ForEach(friendViewModel.findFriends.indices, id: \.self) { index in
-                    
                     LazyVStack(spacing: 0) {
                         var friend = friendViewModel.findFriends[index]
                         
@@ -64,19 +64,19 @@ struct FriendSearchView: View {
                             }
                         }
                         
-                        
+                        Divider()
                     }
-                    
-                    
                 }
-
-                
             }
             .padding(.horizontal, 20)
         }
         .onDisappear {
             friendViewModel.findFriends = []
         }
+        .scrollDismissesKeyboard(.interactively)
+        .navigationTitle("친구 찾기")
+        .navigationBarTitleDisplayMode(.inline)
+    
     }
     
     enum FocusField: Hashable {
@@ -97,7 +97,6 @@ struct FriendCell: View {
                 .font(.title2)
             
             Spacer()
-            
             if(friend.status == .alreadyFriend) {
                 Text("친구")
                     .padding(.vertical, 8)

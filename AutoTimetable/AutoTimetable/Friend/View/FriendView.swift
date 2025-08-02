@@ -18,9 +18,7 @@ struct FriendView: View {
     }
     
     var body: some View {
-        
         ZStack {
-            
             if(friendViewModel.isLoading) {
                 ProgressView()
             }
@@ -28,7 +26,6 @@ struct FriendView: View {
             ScrollView {
                 VStack {
                     HStack {
-                        
                         NavigationLink(destination: FriendSelectorView(friendViewModel: friendViewModel), label: {
                             VStack {
                                 Image(systemName: "rectangle.split.3x3")
@@ -66,7 +63,6 @@ struct FriendView: View {
                         NavigationLink(destination: FriendSearchView(friendViewModel: friendViewModel), label: {
                             Image(systemName: "person.crop.circle.fill.badge.plus")
                         })
-                        
                     }
                     .padding(.vertical)
                     
@@ -77,9 +73,6 @@ struct FriendView: View {
                     }
                     .pickerStyle(SegmentedPickerStyle())
                     
-                    // 왜 있지?
-                    Spacer()
-                    
                     switch selectedTab {
                     case .friend:
                         FriendListView(friendViewModel: friendViewModel)
@@ -87,15 +80,10 @@ struct FriendView: View {
                         PendingListView(friendViewModel: friendViewModel)
                     }
                     
-                    // 왜 있지?
                     Spacer()
                 }
                 .padding(.horizontal, 20)
             }
-            
-//            if(friendViewModel.isLoading) {
-//                loadingView()
-//            }
         }
     }
     

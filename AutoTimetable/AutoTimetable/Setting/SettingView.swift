@@ -71,20 +71,35 @@ struct SettingView: View {
 }
 
 struct ChangePasswordView: View {
+    
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @Environment(\.dismiss) private var dismiss
+    
     @State private var currentPassword = ""
     @State private var newPassword = ""
     @State private var confirmPassword = ""
     
     @State private var isVerified = false
+    @State private var isPasswordValid: Bool = false
     @State private var showError = false
     @State private var errorMessage = ""
+    @State private var passwordsMatch: Bool = false
+    @State private var passwordError = ""
     
     var body: some View {
         Form {
             Section(header: Text("현재 비밀번호")) {
                 SecureField("현재 비밀번호", text: $currentPassword)
                 Button("인증하기") {
-                    verifyCurrentPassword()
+                    authViewModel.passwordValid(password: currentPassword) { isValid in
+                        if(isValid) {
+                            isVerified = true
+                        }
+                        else {
+                            showError = true
+                            errorMessage = "비밀번호가 일치하지 않습니다."
+                        }
+                    }
                 }
             }
             
@@ -93,12 +108,22 @@ struct ChangePasswordView: View {
                     SecureField("새 비밀번호", text: $newPassword)
                     SecureField("비밀번호 확인", text: $confirmPassword)
                     Button("비밀번호 변경") {
-                        changePassword()
+                        authViewModel.passwordChange(password: newPassword) {
+                            dismiss()
+                        }
                     }
+                    .disabled(disabledCondition())
                 }
             }
         }
         .navigationTitle("비밀번호 변경")
+        .onChange(of: newPassword) { _ in
+            validatePasswords()
+            confirmPasswordMatch()
+        }
+        .onChange(of: confirmPassword) { _ in
+            confirmPasswordMatch()
+        }
         .alert("오류", isPresented: $showError) {
             Button("확인", role: .cancel) { }
         } message: {
@@ -106,32 +131,38 @@ struct ChangePasswordView: View {
         }
     }
     
-    // MARK: - 인증 로직 예시
-    private func verifyCurrentPassword() {
-        // 여기에 실제 인증 로직 (예: API 호출) 추가
-        if currentPassword == "test1234" { // 임시 예시
-            isVerified = true
+    // 비밀번호 규칙 맞는지 확인
+    func validatePasswords() {
+        if !passwordMeetsCriteria(newPassword) {
+            isPasswordValid = false
         } else {
-            errorMessage = "현재 비밀번호가 올바르지 않습니다."
-            showError = true
+            isPasswordValid = true
         }
+    }
+    // 재입력 비밀번호가 맞는지
+    func confirmPasswordMatch() {
+        if newPassword == confirmPassword {
+            passwordError = ""
+            passwordsMatch = true
+        } else {
+            passwordError = "비밀번호가 일치하지 않습니다"
+            passwordsMatch = false
+        }
+    }
+    // 비밀번호 규칙
+    func passwordMeetsCriteria(_ password: String) -> Bool {
+        let containsNumber = password.rangeOfCharacter(from: .decimalDigits) != nil
+        let containsLetter = password.rangeOfCharacter(from: .letters) != nil
+        let count = password.count >= 6
+        
+        return containsNumber && containsLetter && count
+    }
+    // 회원가입 버튼 활성화 조건
+    func disabledCondition() -> Bool {
+        let disabled = !isPasswordValid || !passwordsMatch
+        return disabled
     }
     
-    // MARK: - 비밀번호 변경 로직 예시
-    private func changePassword() {
-        guard !newPassword.isEmpty, !confirmPassword.isEmpty else {
-            errorMessage = "새 비밀번호를 모두 입력해주세요."
-            showError = true
-            return
-        }
-        guard newPassword == confirmPassword else {
-            errorMessage = "비밀번호가 일치하지 않습니다."
-            showError = true
-            return
-        }
-        // 실제 비밀번호 변경 API 호출 예시
-        print("비밀번호 변경 완료")
-    }
 }
 
 

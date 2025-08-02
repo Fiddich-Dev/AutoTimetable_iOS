@@ -11,13 +11,23 @@ import Combine
 // 선택된 전공, 강의는 뷰모델에 저장
 struct AutoCreateTimetableView: View {
     
-    @StateObject var viewModel = GenerateTimetableViewModel()
+    @StateObject var viewModel: GenerateTimetableViewModel
     
     @Binding var isPresented: Bool
     
     @FocusState private var isFocused: FocusField?
     
+    init(authViewModel: AuthViewModel, isPresented: Binding<Bool>) {
+        _viewModel = StateObject(wrappedValue: GenerateTimetableViewModel(viewModel: authViewModel))
+        self._isPresented = isPresented
+    }
+    
     var body: some View {
+        ZStack {
+            if(viewModel.isLoading) {
+                ProgressView()
+            }
+            
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     
@@ -75,8 +85,9 @@ struct AutoCreateTimetableView: View {
                 }
                 .padding(.horizontal, 20)
             } // scrollView
+            .scrollDismissesKeyboard(.interactively)
             .onAppear {
-                viewModel.fetchEverytimeCategories(year: "2025", semester: "2")
+                viewModel.fetchEverytimeCategories(year: viewModel.currentYear, semester: viewModel.currentSemester)
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -86,6 +97,7 @@ struct AutoCreateTimetableView: View {
                     .disabled(viewModel.selectedCategories.isEmpty || (viewModel.targetCultureCnt == 0 && viewModel.targetMajorCnt == 0))
                 }
             }
+        }
     }
     
     enum FocusField: Hashable {

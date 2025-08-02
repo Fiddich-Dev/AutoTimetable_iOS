@@ -51,12 +51,13 @@
 		3BEB2B7A2E1C326C00ABF7DD /* AuthPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEB2B792E1C326C00ABF7DD /* AuthPlugin.swift */; };
 		3BEB2B7D2E1E26A500ABF7DD /* Modifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEB2B7C2E1E26A500ABF7DD /* Modifier.swift */; };
 		3BEB2B812E1E4A4200ABF7DD /* FriendListVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEB2B802E1E4A4200ABF7DD /* FriendListVIew.swift */; };
-		3BEB2B832E1EB9C600ABF7DD /* TimetableOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEB2B822E1EB9C600ABF7DD /* TimetableOptionView.swift */; };
-		3BEB2B852E1F9FFF00ABF7DD /* CompareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEB2B842E1F9FFF00ABF7DD /* CompareView.swift */; };
+		3BEB2B852E1F9FFF00ABF7DD /* CompareLectureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEB2B842E1F9FFF00ABF7DD /* CompareLectureView.swift */; };
 		4D0B3B3E2E3AA129007E8996 /* EveryTimetableDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B3B3D2E3AA129007E8996 /* EveryTimetableDetailView.swift */; };
 		4D0B3B402E3B602F007E8996 /* YearAndSemesterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B3B3F2E3B602F007E8996 /* YearAndSemesterCell.swift */; };
 		4D0B3B422E3DFB3E007E8996 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B3B412E3DFB3E007E8996 /* Extension.swift */; };
 		4D0B3B442E3DFB5E007E8996 /* LectureCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B3B432E3DFB5E007E8996 /* LectureCardView.swift */; };
+		4D0B3B462E3E2EF8007E8996 /* CompareFreeTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B3B452E3E2EF8007E8996 /* CompareFreeTimeView.swift */; };
+		4D0B3B492E3E3C5C007E8996 /* PopupView in Frameworks */ = {isa = PBXBuildFile; productRef = 4D0B3B482E3E3C5C007E8996 /* PopupView */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -120,13 +121,13 @@
 		3BEB2B792E1C326C00ABF7DD /* AuthPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPlugin.swift; sourceTree = "<group>"; };
 		3BEB2B7C2E1E26A500ABF7DD /* Modifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modifier.swift; sourceTree = "<group>"; };
 		3BEB2B802E1E4A4200ABF7DD /* FriendListVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendListVIew.swift; sourceTree = "<group>"; };
-		3BEB2B822E1EB9C600ABF7DD /* TimetableOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimetableOptionView.swift; sourceTree = "<group>"; };
-		3BEB2B842E1F9FFF00ABF7DD /* CompareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareView.swift; sourceTree = "<group>"; };
+		3BEB2B842E1F9FFF00ABF7DD /* CompareLectureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareLectureView.swift; sourceTree = "<group>"; };
 		3BEB2B862E22540200ABF7DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		4D0B3B3D2E3AA129007E8996 /* EveryTimetableDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EveryTimetableDetailView.swift; sourceTree = "<group>"; };
 		4D0B3B3F2E3B602F007E8996 /* YearAndSemesterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearAndSemesterCell.swift; sourceTree = "<group>"; };
 		4D0B3B412E3DFB3E007E8996 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		4D0B3B432E3DFB5E007E8996 /* LectureCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LectureCardView.swift; sourceTree = "<group>"; };
+		4D0B3B452E3E2EF8007E8996 /* CompareFreeTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareFreeTimeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -147,6 +148,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D0B3B492E3E3C5C007E8996 /* PopupView in Frameworks */,
 				3B5EC2982DF1730E0086A469 /* Moya in Frameworks */,
 				3B5EC2962DF1730E0086A469 /* CombineMoya in Frameworks */,
 				3B5EC2B02DF195F10086A469 /* SwiftKeychainWrapper in Frameworks */,
@@ -188,7 +190,8 @@
 				3B5EC2DF2E0C15480086A469 /* FriendView.swift */,
 				3BEB2B802E1E4A4200ABF7DD /* FriendListVIew.swift */,
 				3B5EC2DE2E0C15480086A469 /* FriendSearchView.swift */,
-				3BEB2B842E1F9FFF00ABF7DD /* CompareView.swift */,
+				3BEB2B842E1F9FFF00ABF7DD /* CompareLectureView.swift */,
+				4D0B3B452E3E2EF8007E8996 /* CompareFreeTimeView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -344,7 +347,6 @@
 				3B5EC2F92E0C15480086A469 /* SelectLikeLecturesView.swift */,
 				3B5EC2F82E0C15480086A469 /* SelectExcludeTimeView.swift */,
 				3B5EC3272E0D19610086A469 /* MakedTimetableView.swift */,
-				3BEB2B822E1EB9C600ABF7DD /* TimetableOptionView.swift */,
 			);
 			path = auto;
 			sourceTree = "<group>";
@@ -396,6 +398,7 @@
 				3B5EC2992DF1730E0086A469 /* ReactiveMoya */,
 				3B5EC29B2DF1730E0086A469 /* RxMoya */,
 				3B5EC2AF2DF195F10086A469 /* SwiftKeychainWrapper */,
+				4D0B3B482E3E3C5C007E8996 /* PopupView */,
 			);
 			productName = AutoTimetable;
 			productReference = 3B8D89E62DEEC37D00AE1944 /* AutoTimetable.app */;
@@ -482,6 +485,7 @@
 			packageReferences = (
 				3B5EC2942DF1730E0086A469 /* XCRemoteSwiftPackageReference "Moya" */,
 				3B5EC2AE2DF195F10086A469 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
+				4D0B3B472E3E3C5C007E8996 /* XCRemoteSwiftPackageReference "PopupView" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3B8D89E72DEEC37D00AE1944 /* Products */;
@@ -532,7 +536,6 @@
 				3BEB2B7D2E1E26A500ABF7DD /* Modifier.swift in Sources */,
 				3B5EC3072E0C15480086A469 /* FriendViewModel.swift in Sources */,
 				3B5EC3082E0C15480086A469 /* FriendSearchView.swift in Sources */,
-				3BEB2B832E1EB9C600ABF7DD /* TimetableOptionView.swift in Sources */,
 				3B5EC3092E0C15480086A469 /* FriendView.swift in Sources */,
 				3B5EC30A2E0C15480086A469 /* HomeView.swift in Sources */,
 				3B5EC30B2E0C15480086A469 /* AuthAPI.swift in Sources */,
@@ -540,7 +543,7 @@
 				3B5EC30D2E0C15480086A469 /* AuthViewModel.swift in Sources */,
 				3B5EC3282E0D19610086A469 /* MakedTimetableView.swift in Sources */,
 				3B5EC30E2E0C15480086A469 /* KeychainManager.swift in Sources */,
-				3BEB2B852E1F9FFF00ABF7DD /* CompareView.swift in Sources */,
+				3BEB2B852E1F9FFF00ABF7DD /* CompareLectureView.swift in Sources */,
 				3B5EC3262E0C20B40086A469 /* SearchBarView.swift in Sources */,
 				3B5EC30F2E0C15480086A469 /* LoginView.swift in Sources */,
 				3B5EC3102E0C15480086A469 /* PasswordResetView.swift in Sources */,
@@ -567,6 +570,7 @@
 				3B5EC31F2E0C15480086A469 /* AutoTimetableApp.swift in Sources */,
 				3BEB2B7A2E1C326C00ABF7DD /* AuthPlugin.swift in Sources */,
 				4D0B3B442E3DFB5E007E8996 /* LectureCardView.swift in Sources */,
+				4D0B3B462E3E2EF8007E8996 /* CompareFreeTimeView.swift in Sources */,
 				3B5EC3202E0C15480086A469 /* ContentView.swift in Sources */,
 				3B5EC3212E0C15480086A469 /* SwiftUIView.swift in Sources */,
 			);
@@ -747,7 +751,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = fiddich.AutoTimetable;
+				PRODUCT_BUNDLE_IDENTIFIER = fiddich.Schedule;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -788,7 +792,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = fiddich.AutoTimetable;
+				PRODUCT_BUNDLE_IDENTIFIER = fiddich.Schedule;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -948,6 +952,14 @@
 				minimumVersion = 4.0.1;
 			};
 		};
+		4D0B3B472E3E3C5C007E8996 /* XCRemoteSwiftPackageReference "PopupView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/exyte/PopupView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.1.11;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -975,6 +987,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3B5EC2AE2DF195F10086A469 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */;
 			productName = SwiftKeychainWrapper;
+		};
+		4D0B3B482E3E3C5C007E8996 /* PopupView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D0B3B472E3E3C5C007E8996 /* XCRemoteSwiftPackageReference "PopupView" */;
+			productName = PopupView;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

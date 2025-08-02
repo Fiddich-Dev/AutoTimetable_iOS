@@ -17,6 +17,10 @@ class FriendViewModel: ObservableObject {
     
     private var provider: MoyaProvider<FriendApi>!
     
+    // 현재 학년도
+    var currentYear = ""
+    var currentSemester = ""
+    
     @Published var isLoading: Bool = false
     
     @Published var myFriends: [Friend] = []
@@ -35,6 +39,7 @@ class FriendViewModel: ObservableObject {
     @Published var compareTimes: [Lecture] = []
     
     init(viewModel: AuthViewModel) {
+        loadCurrentSemester()
         let authPlugin = AuthPlugin(viewModel: viewModel)
         self.provider = MoyaProvider<FriendApi>(plugins: [authPlugin])
     }
@@ -265,6 +270,28 @@ class FriendViewModel: ObservableObject {
                 }
             }
         }
+    }
+    
+    // MARK: 현재 학년도 가져오기
+    private func loadCurrentSemester() {
+        let date = Date()
+        let calendar = Calendar.current
+        let year = calendar.component(.year, from: date)
+        let month = calendar.component(.month, from: date)
+        
+        self.currentYear = String(year)
+
+        switch month {
+        case 1...6:
+            self.currentSemester = "1"
+        case 7...12:
+            self.currentSemester = "2"
+        default:
+            self.currentSemester = "99"
+        }
+        
+        print("\(self.currentYear)년 \(self.currentSemester)학기")
+        
     }
     
     

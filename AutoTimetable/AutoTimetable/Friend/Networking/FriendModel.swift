@@ -13,8 +13,6 @@ struct Friend: Codable, Hashable {
     var studentId: String
     var profileImage: String?
     var username: String
-//    var school: String
-//    var department: String
 }
 
 

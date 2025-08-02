@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PopupView
 
 
 struct FriendSelectorView: View {
@@ -29,52 +30,16 @@ struct FriendSelectorView: View {
         .toolbar {
             
             ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink(destination: FriendCompareTimetableView(friendViewModel: friendViewModel)) {
+                NavigationLink(destination: TimetableView_Temp1(compareTimetableDtos: friendViewModel.compareTimetableDtos)) {
                     Text("완료")
-                }
+                }.simultaneousGesture(TapGesture().onEnded {
+                    friendViewModel.compareLectureWithFriend(
+                        year: friendViewModel.currentYear,
+                        semeser: friendViewModel.currentSemester,
+                        memberIds: friendViewModel.selectedFriends.map { $0.id }
+                    )
+                })
             }
-        }
-    }
-}
-
-struct FriendSelectorView2: View {
-    
-    @ObservedObject var friendViewModel: FriendViewModel
-    
-    var body: some View {
-        List(friendViewModel.myFriends, id: \.id) { friend in
-            MultipleSelectionRow(
-                friend: friend,
-                isSelected: friendViewModel.selectedFriends.contains(friend)
-            ) {
-                if friendViewModel.selectedFriends.contains(friend) {
-                    friendViewModel.selectedFriends.removeAll { $0.id == friend.id }
-                } else {
-                    friendViewModel.selectedFriends.append(friend)
-                }
-            }
-        }
-        .navigationTitle("친구 선택")
-        .toolbar {
-            
-            ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink(destination: TimetableView_Temp(lectures: friendViewModel.compareTimes)
-                    .onAppear {
-                        friendViewModel.compareTimeWithFriend(year: "2025", semeser: "1", memberIds: friendViewModel.selectedFriends.map { $0.id })
-                    }
-                ) {
-                    Text("완료")
-                }
-            }
-        }
-    }
-}
-
-struct TimetableView_Temp: View {
-    let lectures: [Lecture]
-    var body: some View {
-        ScrollView {
-            BaseTimetableView2(lectures: lectures, showFullDay: false) { _, _ in EmptyView() }
         }
     }
 }
@@ -107,7 +72,14 @@ struct MultipleSelectionRow: View {
     }
 }
 
-
+struct TimetableView_Temp1: View {
+    let compareTimetableDtos: [CompareTimetableDto]
+    var body: some View {
+        ScrollView {
+            BaseTimetableView1(compareTimetableDtos: compareTimetableDtos, showFullDay: false) { _, _ in EmptyView() }
+        }
+    }
+}
 
 struct FriendCompareTimetableView: View {
     @ObservedObject var friendViewModel: FriendViewModel
@@ -182,8 +154,8 @@ struct FriendCompareTimetableView: View {
                 }
                 .onAppear {
                     friendViewModel.compareLectureWithFriend(
-                        year: "2025",
-                        semeser: "1",
+                        year: friendViewModel.currentYear,
+                        semeser: friendViewModel.currentSemester,
                         memberIds: friendViewModel.selectedFriends.map { $0.id }
                     )
                 }
@@ -284,16 +256,21 @@ struct FriendCompareTimetableView: View {
 
 
 
-struct BaseTimetableView2<Content: View>: View {
-    let lectures: [Lecture]
+struct BaseTimetableView1<Content: View>: View {
+    let compareTimetableDtos: [CompareTimetableDto]
     let showFullDay: Bool
     let content: (CGFloat, GeometryProxy) -> Content
+    
+    @State private var selectedLecture: Lecture? = nil
+    @State private var showInfoModal: Bool = false
+    @State private var selectedNames: [String] = []
+    @State private var selectedStudentIds: [String] = []
     
     private var displayHours: [Int] {
         if showFullDay {
             return TimetableConstants.allHours
         } else {
-            if lectures.isEmpty {
+            if compareTimetableDtos.isEmpty {
                 return Array(TimetableConstants.defaultStartHour...TimetableConstants.defaultEndHour)
             }
             let (startHour, endHour) = calculateTimeRange()
@@ -338,10 +315,11 @@ struct BaseTimetableView2<Content: View>: View {
                     }
                 }
                 
-                ForEach(lectures, id: \.id) { lecture in
-                    let blocks = createLectureBlock(lecture: lecture, cellWidth: cellWidth, viewStartHour: displayHours.first ?? TimetableConstants.defaultStartHour)
+                ForEach(compareTimetableDtos, id: \.id) { compareTimetableDto in
+                    let blocks = createLectureBlock(compareTimetableDto: compareTimetableDto, cellWidth: cellWidth, viewStartHour: displayHours.first ?? TimetableConstants.defaultStartHour)
                     ForEach(blocks.indices, id: \.self) { index in
                         blocks[index]
+                        
                     }
                 }
                 
@@ -355,7 +333,7 @@ struct BaseTimetableView2<Content: View>: View {
         var minHour = TimetableConstants.defaultStartHour
         var maxHour = TimetableConstants.defaultEndHour
         
-        for lecture in lectures {
+        for lecture in compareTimetableDtos.map{ $0.lecture } {
             let times = lecture.time.components(separatedBy: ",")
             for time in times {
                 let timeRange = time.dropFirst()
@@ -376,15 +354,17 @@ struct BaseTimetableView2<Content: View>: View {
     }
     
     // 이 함수의 로직이 가장 중요하게 바뀝니다.
-    func createLectureBlock(lecture: Lecture, cellWidth: CGFloat, viewStartHour: Int) -> [AnyView] {
+    func createLectureBlock(compareTimetableDto: CompareTimetableDto, cellWidth: CGFloat, viewStartHour: Int) -> [AnyView] {
         // [개선] 하드코딩된 dayMap을 제거합니다.
         // let dayMap = ["월": 0, "화": 1, "수": 2, "목": 3, "금": 4] // 이 줄을 삭제!
+        
+        var lecture = compareTimetableDto.lecture
         
         let times = lecture.time.components(separatedBy: ",")
         var views: [AnyView] = []
         
         let colorIndex = abs(lecture.id.hashValue) % TimetableConstants.lectureColors.count
-        let lectureColor = Color.green.opacity(0.3)
+        let lectureColor = TimetableConstants.lectureColors[colorIndex]
         
         for time in times {
             // [개선] 요일 문자를 기반으로 TimetableConstants.days 배열에서 직접 인덱스를 찾습니다.
@@ -416,23 +396,44 @@ struct BaseTimetableView2<Content: View>: View {
             
             let block = AnyView(
                 VStack(spacing: 2) {
-                    //                    Text(lecture.name).font(.caption2).lineLimit(1).minimumScaleFactor(0.5)
-                    //                    Text(lecture.professor).font(.caption2).lineLimit(1).minimumScaleFactor(0.5)
+                    Text(lecture.name).font(.caption2).lineLimit(1).minimumScaleFactor(0.5)
+                    Text(lecture.professor).font(.caption2).lineLimit(1).minimumScaleFactor(0.5)
                 }
                     .padding(2)
                     .frame(width: cellWidth - 4, height: height - 4)
                     .background(lectureColor.opacity(0.7))
                     .cornerRadius(4)
                     .overlay(RoundedRectangle(cornerRadius: 4).stroke(lectureColor.opacity(0.9), lineWidth: 1))
+//                    .contentShape(Rectangle()) // ⭐️ 제스처 인식 영역 명시
+//                    .onTapGesture {
+//                        print("강의 탭: \(lecture.name)")
+//                        selectedLecture = lecture
+//                        showInfoModal = true
+//                        selectedNames = compareTimetableDto.usernames
+//                        selectedStudentIds = compareTimetableDto.studentIds
+//                    }
                     .position(x: x, y: y)
             )
-            
             views.append(block)
         }
         
         return views
     }
+}
+
+struct MembersInfoModal: View {
     
+    var memberName: [String]
+    var memberStudentId: [String]
+    
+    var body: some View {
+        ForEach(memberName.indices, id: \.self) { index in
+            HStack {
+                Text("\(memberName[index]) : \(memberStudentId[index])")
+            }
+            
+        }
+    }
 }
 
 

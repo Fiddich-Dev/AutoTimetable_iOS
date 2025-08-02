@@ -19,6 +19,8 @@ enum AuthAPI {
     case passwordReset(studentId: String, newPassword: String)
     case mailSend(email: String)
     case mailVerify(email: String, authCode: String)
+    case passwordValid(password: String)
+    case passwordChange(password: String)
 }
 
 
@@ -51,6 +53,10 @@ extension AuthAPI: TargetType {
             return "/mail/send"
         case .mailVerify:
             return "/mail/verify"
+        case .passwordValid:
+            return "/password-valid"
+        case .passwordChange:
+            return "/password-change"
         }
     }
     
@@ -76,6 +82,10 @@ extension AuthAPI: TargetType {
             return .post
         case .mailVerify:
             return .post
+        case .passwordValid:
+            return .post
+        case .passwordChange:
+            return .patch
         }
     }
     
@@ -101,6 +111,10 @@ extension AuthAPI: TargetType {
             return .requestParameters(parameters: ["email": email], encoding: JSONEncoding.default)
         case .mailVerify(let email, let authCode):
             return .requestParameters(parameters: ["email": email, "authCode": authCode], encoding: JSONEncoding.default)
+        case .passwordValid(let password):
+            return .requestParameters(parameters: ["password": password], encoding: JSONEncoding.default)
+        case .passwordChange(let password):
+            return .requestParameters(parameters: ["password": password], encoding: JSONEncoding.default)
         }
     }
     
@@ -126,6 +140,10 @@ extension AuthAPI: TargetType {
             return ["Content-type": "application/json"]
         case .mailVerify:
             return ["Content-type": "application/json"]
+        case .passwordValid(password: let password):
+            return ["Authorization": "Bearer \(getToken() ?? "asd")"]
+        case .passwordChange(password: let password):
+            return ["Authorization": "Bearer \(getToken() ?? "asd")"]
         }
     }
     

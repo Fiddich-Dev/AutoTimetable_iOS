@@ -10,12 +10,17 @@ import Combine
 
 struct SavedTimetableView: View {
     @ObservedObject var timetableViewModel: TimetableViewModel
-    @StateObject var generateTimetableViewModel: GenerateTimetableViewModel = GenerateTimetableViewModel()
+    @StateObject var generateTimetableViewModel: GenerateTimetableViewModel
 
     @State private var selectedIndex: Int = 0
     @State private var canEdit = false
     @State private var isAlertPresented = false
     @State private var isDeleteAlert = false
+    
+    init(authViewModel: AuthViewModel, timetableViewModel: TimetableViewModel) {
+        self.timetableViewModel = timetableViewModel
+        _generateTimetableViewModel = StateObject(wrappedValue: GenerateTimetableViewModel(viewModel: authViewModel))
+    }
 
     var body: some View {
         if timetableViewModel.timetableAboutYearAndSemester.isEmpty {
@@ -40,7 +45,7 @@ struct SavedTimetableView: View {
 
                         if canEdit {
                             Button("취소") {
-                                timetableViewModel.getTimetablesByYearAndSemester(year: "2025", semester: "2") {
+                                timetableViewModel.getTimetablesByYearAndSemester(year: timetableViewModel.currentYear, semester: timetableViewModel.currentSemester) {
                                     canEdit = false
                                 }
                             }.foregroundStyle(.red)
@@ -62,7 +67,7 @@ struct SavedTimetableView: View {
                             Button(action: {
                                 let timetableId = timetableViewModel.timetableAboutYearAndSemester[selectedIndex].id
                                 timetableViewModel.patchMainTimetable(timetableId: timetableId) {
-                                    timetableViewModel.getTimetablesByYearAndSemester(year: "2025", semester: "2") {}
+                                    timetableViewModel.getTimetablesByYearAndSemester(year: timetableViewModel.currentYear, semester: timetableViewModel.currentSemester) {}
                                 }
                             }) {
                                 Image(systemName: timetableViewModel.timetableAboutYearAndSemester[selectedIndex].isRepresent ? "star.fill" : "star")
@@ -114,7 +119,7 @@ struct SavedTimetableView: View {
                 Button("삭제", role: .destructive) {
                     let timetableId = timetableViewModel.timetableAboutYearAndSemester[selectedIndex].id
                     timetableViewModel.deleteTimetable(timetableId: timetableId) {
-                        timetableViewModel.getTimetablesByYearAndSemester(year: "2025", semester: "2") {
+                        timetableViewModel.getTimetablesByYearAndSemester(year: timetableViewModel.currentYear, semester: timetableViewModel.currentSemester) {
                             let newCount = timetableViewModel.timetableAboutYearAndSemester.count
                             if selectedIndex >= newCount && newCount > 0 {
                                 selectedIndex = newCount - 1

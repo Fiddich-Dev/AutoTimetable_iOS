@@ -10,6 +10,7 @@ import SwiftUI
 struct SavedYearAndSemesterView: View {
     
     @ObservedObject var timetableViewModel: TimetableViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -19,7 +20,7 @@ struct SavedYearAndSemesterView: View {
                     // 저장된 학년도를 루프
                     ForEach(timetableViewModel.yearAndSemesters, id: \.self) { yearAndSemester in
                         // 해당 학년도의 시간표로 가는 버튼
-                        NavigationLink(destination: SavedTimetableView(timetableViewModel: timetableViewModel), label: {
+                        NavigationLink(destination: SavedTimetableView(authViewModel: authViewModel, timetableViewModel: timetableViewModel), label: {
                             YearAndSemesterCell(year: yearAndSemester.year, semester: yearAndSemester.semester)
                         })
                         // 탭하면 뷰모델에 선택한 학년도 저장

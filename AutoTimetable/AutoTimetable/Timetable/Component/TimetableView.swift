@@ -195,7 +195,9 @@ struct BaseTimetableView<Content: View>: View {
                     selectedLecture = lecture
                     showInfoModal = true
                 }
-                .sheet(isPresented: $showInfoModal) { if let selectedLecture { LectureInfoModal(lecture: selectedLecture) } }
+                .sheet(isPresented: $showInfoModal) { if let selectedLecture { LectureInfoModal(lecture: selectedLecture)
+                        .presentationDetents([.medium])
+                } }
                 .position(x: x, y: y)
             )
             views.append(block)
@@ -311,14 +313,59 @@ struct LectureInfoModal: View {
     var lecture: Lecture
     
     var body: some View {
-        VStack {
-            Text("\(lecture.name)")
-            Text("\(lecture.professor)")
-            Text("\(lecture.codeSection)")
-            Text("\(lecture.credit)")
-            Text("\(lecture.notice)")
+        VStack(spacing: 16) {
+            // 제목
+            Text(lecture.name)
+                .font(.title2)
+                .fontWeight(.bold)
+                .multilineTextAlignment(.center)
+            
+            Divider()
+            
+            VStack(alignment: .leading, spacing: 8) {
+                InfoRow(title: "교수님", value: lecture.professor)
+                InfoRow(title: "코드", value: lecture.codeSection)
+                InfoRow(title: "학점", value: "\(lecture.credit)")
+                InfoRow(title: "비고", value: lecture.notice.isEmpty ? "없음" : lecture.notice)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            
+            Spacer()
+            
+            Button(action: {
+                dismiss()
+            }) {
+                Text("닫기")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.accentColor)
+                    .cornerRadius(12)
+            }
         }
         .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color(.systemBackground))
+                .shadow(radius: 10)
+        )
+        .padding()
+    }
+}
+
+struct InfoRow: View {
+    var title: String
+    var value: String
+
+    var body: some View {
+        HStack {
+            Text(title)
+                .fontWeight(.semibold)
+            Spacer()
+            Text(value)
+                .foregroundColor(.secondary)
+        }
     }
 }
 

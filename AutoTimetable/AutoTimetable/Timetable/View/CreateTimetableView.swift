@@ -10,6 +10,7 @@ import SwiftUI
 struct CreateTimetableView: View {
     
     @ObservedObject var timetableViewModel: TimetableViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
     @Binding var isPresented: Bool
 
     var body: some View {
@@ -23,16 +24,16 @@ struct CreateTimetableView: View {
                 
                 HStack {
                     // 에타 매핑뷰
-                    NavigationLink(destination: EveryTimeMappingView(), label: {
+                    NavigationLink(destination: EveryTimeMappingView(authViewModel: authViewModel), label: {
                         CardLabel(systemName: "square.and.arrow.down", description: "에타에서 가져오기", color: .orange)
                     })
                     // 커스텀 생성뷰
-                    NavigationLink(destination: CustomCreateTimetableView(isPresented: $isPresented), label: {
+                    NavigationLink(destination: CustomCreateTimetableView(authViewModel: authViewModel, isPresented: $isPresented), label: {
                         CardLabel(systemName: "pencil.and.outline", description: "커스텀 생성", color: .green)
                     })
                 }
                 // 자동생성 뷰
-                NavigationLink(destination: AutoCreateTimetableView(isPresented: $isPresented), label: {
+                NavigationLink(destination: AutoCreateTimetableView(authViewModel: authViewModel, isPresented: $isPresented), label: {
                     CardLabel(systemName: "sparkles", description: "자동 생성", color: .blue)
                 })
                 

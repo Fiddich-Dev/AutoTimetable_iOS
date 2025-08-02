@@ -230,6 +230,49 @@ class AuthViewModel: ObservableObject {
         }
     }
     
+    func passwordValid(password: String, completion: @escaping (Bool) -> Void) {
+        self.isLoading = true
+        provider.request(.passwordValid(password: password)) { result in
+            DispatchQueue.main.async {
+                
+                defer { self.isLoading = false }
+                
+                switch result {
+                case .success(let response):
+                    if let apiResponse = try? response.map(ApiResponse<EmptyContent>.self) {
+                        print("✅ passwordValid매핑 성공")
+                        completion(true)
+                    }
+                case .failure:
+                    print("🚨 passwordValid매핑 실패")
+                    completion(false)
+                }
+            }
+        }
+    }
+    
+    func passwordChange(password: String, completion: @escaping () -> Void) {
+        self.isLoading = true
+        provider.request(.passwordChange(password: password)) { result in
+            DispatchQueue.main.async {
+                
+                defer { self.isLoading = false }
+                
+                switch result {
+                case .success(let response):
+                    if let apiResponse = try? response.map(ApiResponse<EmptyContent>.self) {
+                        print("✅ passwordChange매핑 성공")
+                        completion()
+                    }
+                case .failure:
+                    print("🚨 passwordChange매핑 실패")
+                }
+            }
+        }
+    }
+    
+    
+    
     private func forceLogout() {
         // 로그아웃 처리 (예: 사용자 세션 종료, UI 업데이트 등)
         print("강제 로그아웃")
