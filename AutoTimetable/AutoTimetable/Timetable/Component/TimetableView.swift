@@ -7,6 +7,15 @@
 
 import SwiftUI
 
+
+// 편집이 가능한 시간표 뷰(강의삭제, 강의추가, 강의정보 보기)
+// 편집이 불가능한 시간표 뷰(에타 조회)
+// 제외하고 싶은 부분을 선택하는 시간표 뷰(풀 사이즈)
+
+
+
+
+
 // MARK: - 공통 상수 정의
 struct TimetableConstants {
     // [수정] "토" 요일을 배열에 추가합니다. 이제 6일이 기준이 됩니다.
@@ -40,6 +49,9 @@ struct BaseTimetableView<Content: View>: View {
     let lectures: [Lecture]
     let showFullDay: Bool
     let content: (CGFloat, GeometryProxy) -> Content
+    
+    @State private var selectedLecture: Lecture? = nil
+    @State private var showInfoModal: Bool = false
     
     private var displayHours: [Int] {
         if showFullDay {
@@ -94,6 +106,7 @@ struct BaseTimetableView<Content: View>: View {
                     let blocks = createLectureBlock(lecture: lecture, cellWidth: cellWidth, viewStartHour: displayHours.first ?? TimetableConstants.defaultStartHour)
                     ForEach(blocks.indices, id: \.self) { index in
                         blocks[index]
+
                     }
                 }
                 
@@ -176,9 +189,15 @@ struct BaseTimetableView<Content: View>: View {
                 .background(lectureColor.opacity(0.7))
                 .cornerRadius(4)
                 .overlay(RoundedRectangle(cornerRadius: 4).stroke(lectureColor.opacity(0.9), lineWidth: 1))
+                .contentShape(Rectangle()) // ⭐️ 제스처 인식 영역 명시
+                .onTapGesture {
+                    print("강의 탭: \(lecture.name)")
+                    selectedLecture = lecture
+                    showInfoModal = true
+                }
+                .sheet(isPresented: $showInfoModal) { if let selectedLecture { LectureInfoModal(lecture: selectedLecture) } }
                 .position(x: x, y: y)
             )
-            
             views.append(block)
         }
         
@@ -187,36 +206,40 @@ struct BaseTimetableView<Content: View>: View {
 }
 
 
-// MARK: - 나머지 뷰들 (변경 없음)
+// MARK: - 기본 읽기 전용 시간표
 struct TimetableView: View {
+    
     let lectures: [Lecture]
     var body: some View { BaseTimetableView(lectures: lectures, showFullDay: false) { _, _ in EmptyView() } }
 }
 
+// MARK: - 읽기 쓰기 모두 가능한 시간표
 struct EditableTimetableView: View {
     @Binding var lectures: [Lecture]
     @Binding var canEdit: Bool
-    @Binding var isAlertPresented: Bool
     
+    @State var isAlertPresented: Bool = false
     @State private var selectedLecture: Lecture? = nil
     @State private var showInfoModal = false
     
     var body: some View {
         BaseTimetableView(lectures: lectures, showFullDay: false) { cellWidth, geo in EmptyView() }
-        .onTapGesture { location in
-            if let lectureToHandle = lectures.first {
-                self.selectedLecture = lectureToHandle
-                if canEdit { self.isAlertPresented = true } else { self.showInfoModal = true }
-            }
-        }
-        .sheet(isPresented: $showInfoModal) { if let selectedLecture { LectureInfoModal(lecture: selectedLecture) } }
-        .alert("정말 삭제할까요?", isPresented: $isAlertPresented) {
-            Button("삭제", role: .destructive) { if let selectedLecture { lectures.removeAll { $0.id == selectedLecture.id } } }
-            Button("취소", role: .cancel) { }
-        }
+//        .onTapGesture { location in
+//            if let lectureToHandle = lectures.first {
+//                self.selectedLecture = lectureToHandle
+//                if canEdit { self.isAlertPresented = true }
+//                else { self.showInfoModal = true }
+//            }
+//        }
+//        .sheet(isPresented: $showInfoModal) { if let selectedLecture { LectureInfoModal(lecture: selectedLecture) } }
+//        .alert("정말 삭제할까요?", isPresented: $isAlertPresented) {
+//            Button("삭제", role: .destructive) { if let selectedLecture { lectures.removeAll { $0.id == selectedLecture.id } } }
+//            Button("취소", role: .cancel) { }
+//        }
     }
 }
 
+// MARK: - 제외할 시간을 체크하기
 struct TimeExclusionView: View {
     @Binding var excludedTimes: Set<TimeSlot>
     @ObservedObject var timetableViewModel: GenerateTimetableViewModel
@@ -256,8 +279,33 @@ struct TimeExclusionView: View {
 }
 
 
+struct TimeSlot: Hashable {
+    let dayIndex: Int
+    let hour: Int
+    
+    func toTimeString() -> String {
+        let dayMap = ["월", "화", "수", "목", "금", "토", "일"]
 
+        let startMinute = hour * 60
+        let endMinute = startMinute + 60
 
+        func formatTime(_ totalMinutes: Int) -> String {
+            let h = totalMinutes / 60
+            let m = totalMinutes % 60
+            return String(format: "%02d%02d", h, m)
+        }
+
+        let day = dayMap[dayIndex]
+        let startTime = formatTime(startMinute)
+        let endTime = formatTime(endMinute)
+        
+        print("\(day)\(startTime)-\(endTime)")
+
+        return "\(day)\(startTime)-\(endTime)"
+    }
+}
+
+// MARK: - 강의 정보 자세히 보기
 struct LectureInfoModal: View {
     @Environment(\.dismiss) var dismiss
     var lecture: Lecture
@@ -274,281 +322,3 @@ struct LectureInfoModal: View {
     }
 }
 
-
-//struct TimetableViewDto: View {
-//
-//    let days = ["월", "화", "수", "목", "금", "토", "일"]
-//    let hours = Array(0..<24)
-//
-//    let conerCellWidth: CGFloat = 20
-//    let conerCellHeight: CGFloat = 20
-//
-//    let cellHeight: CGFloat = 50
-//
-//    let lectures: [ExternalLecture]
-//
-//
-//
-//
-//
-//    var body: some View {
-//
-//        //        ScrollView {
-//
-//        VStack(spacing: 0) {
-//
-//            GeometryReader { geo in
-//
-//                let cellWidth = (geo.size.width - conerCellWidth) / CGFloat(self.days.count)
-//
-//                // 🟦 기본 시간표 그리드
-//                VStack(spacing: 0) {
-//                    // 요일 헤더
-//                    HStack(spacing: 0) {
-//                        Text(" ")
-//                            .frame(width: conerCellWidth, height: conerCellHeight)
-//
-//                        ForEach(days, id: \.self) { day in
-//                            Text(day)
-//                                .frame(width: cellWidth, height: conerCellHeight)
-//                                .font(.caption)
-//                        }
-//                    }
-//
-//                    // 시간 + 셀
-//                    ForEach(hours, id: \.self) { hour in
-//                        HStack(spacing: 0) {
-//                            Text(String(format: "%2d", hour))
-//                                .frame(width: conerCellWidth, height: cellHeight, alignment: .topTrailing)
-//                                .font(.caption)
-//
-//                            ForEach(0..<days.count, id: \.self) { _ in
-//                                Rectangle()
-//                                    .fill(Color.white)
-//                                    .frame(width: cellWidth, height: cellHeight)
-//                                    .border(Color.gray.opacity(0.3))
-//                            }
-//                        }
-//                    }
-//
-//                }
-//
-//                // 🟨 강의 블록
-//                ForEach(lectures, id: \.self) { lecture in
-//                    let blocks = createLectureBlock(lecture: lecture, cellWidth: cellWidth)
-//
-//
-//                    ForEach(blocks.indices, id: \.self) { index in
-//                        blocks[index]
-//                    }
-//                }
-//
-//            }
-//            .frame(height: CGFloat(hours.count) * cellHeight + conerCellHeight)
-//        }
-//        //        }
-//    }
-//
-//    //    "월900-1015,수1030-1145"
-//    func createLectureBlock(lecture: ExternalLecture, cellWidth: CGFloat) -> [AnyView] {
-//        let dayMap = ["월": 0, "화": 1, "수": 2, "목": 3, "금": 4, "토": 5, "일": 6]
-//        let times = lecture.time.components(separatedBy: ",")
-//        var views: [AnyView] = []
-//
-//        for time in times {
-//            guard let xIndex = dayMap[String(time.prefix(1))] else { continue }
-//            let timeRange = time.dropFirst()
-//            let parts = timeRange.split(separator: "-")
-//            guard parts.count == 2,
-//                  let startInt = Int(parts[0]),
-//                  let endInt = Int(parts[1]) else { continue }
-//
-//            let startY = (startInt / 100) * 60 + (startInt % 100)
-//            let endY = (endInt / 100) * 60 + (endInt % 100)
-//
-//            let height = CGFloat(endY - startY) / 60 * cellHeight
-//
-//            let x = CGFloat(xIndex) * cellWidth + conerCellWidth + cellWidth / 2
-//            let y = CGFloat(startY) / 60 * cellHeight + conerCellHeight + height / 2
-//
-//            let block = AnyView(
-//                VStack(spacing: 2) {
-//                    Text(lecture.name)
-//                        .font(.caption2)
-//                        .lineLimit(1)
-//                    Text(lecture.professor)
-//                        .font(.caption2)
-//                        .lineLimit(1)
-//                }
-//                    .frame(width: cellWidth, height: height)
-//                    .background(Color.green.opacity(0.7))
-//                    .cornerRadius(4)
-//                    .position(x: x, y: y)
-//            )
-//
-//            views.append(block)
-//        }
-//
-//        return views
-//    }
-//}
-
-
-
-// MARK: - DTO를 사용하는 시간표 뷰 (최종 수정 버전)
-struct TimetableViewDto: View {
-
-    let lectures: [ExternalLecture]
-    // 뷰를 생성할 때 동적 범위를 보여줄지(false), 전체를 보여줄지(true) 결정합니다.
-    let showFullDay = false
-
-    // 표시할 시간 범위를 계산하는 로직
-    private var displayHours: [Int] {
-        if showFullDay {
-            return TimetableConstants.allHours
-        } else {
-            if lectures.isEmpty {
-                return Array(TimetableConstants.defaultStartHour...TimetableConstants.defaultEndHour)
-            }
-            // calculateDynamicTimeRange 함수를 호출하여 시간 범위를 계산합니다.
-            let (startHour, endHour) = calculateDynamicTimeRange()
-            return Array(startHour...endHour)
-        }
-    }
-    
-    // ExternalLecture에 맞춰 동적 시간 범위를 계산하는 함수 (새로 추가)
-    private func calculateDynamicTimeRange() -> (startHour: Int, endHour: Int) {
-        var minHour = TimetableConstants.defaultStartHour
-        var maxHour = TimetableConstants.defaultEndHour
-        
-        for lecture in lectures {
-            let times = lecture.time.components(separatedBy: ",")
-            for time in times {
-                let timeRange = time.dropFirst()
-                let parts = timeRange.split(separator: "-")
-                guard parts.count == 2,
-                      let startInt = Int(parts[0]),
-                      let endInt = Int(parts[1]) else { continue }
-                
-                let lectureStartHour = startInt / 100
-                // 강의가 12:00에 끝나면 마지막 시간은 11시 교시이므로, 정각에 끝나는 경우 -1을 해줍니다.
-                let lectureEndHour = (endInt % 100 > 0) ? (endInt / 100) : (endInt / 100 - 1)
-                
-                minHour = min(minHour, lectureStartHour)
-                maxHour = max(maxHour, lectureEndHour)
-            }
-        }
-        
-        return (minHour, maxHour)
-    }
-
-    var body: some View {
-        GeometryReader { geo in
-            let cellWidth = (geo.size.width - TimetableConstants.cornerCellWidth) / CGFloat(TimetableConstants.days.count)
-            
-            ZStack {
-                // ... (그리드 및 강의 블록을 그리는 나머지 body 코드는 이전과 동일) ...
-                // 🟦 기본 시간표 그리드
-                VStack(spacing: 0) {
-                    // 요일 헤더
-                    HStack(spacing: 0) {
-                        Text(" ")
-                            .frame(width: TimetableConstants.cornerCellWidth, height: TimetableConstants.cornerCellHeight)
-
-                        ForEach(TimetableConstants.days, id: \.self) { day in
-                            Text(day)
-                                .frame(width: cellWidth, height: TimetableConstants.cornerCellHeight)
-                                .font(.caption)
-                        }
-                    }
-
-                    // 시간 + 셀
-                    ForEach(displayHours, id: \.self) { hour in
-                        HStack(spacing: 0) {
-                            Text(String(format: "%2d", hour))
-                                .frame(width: TimetableConstants.cornerCellWidth, height: TimetableConstants.cellHeight, alignment: .topTrailing)
-                                .font(.caption)
-                                .padding(.trailing, 2)
-
-                            ForEach(0..<TimetableConstants.days.count, id: \.self) { _ in
-                                Rectangle()
-                                    .fill(Color(UIColor.systemBackground))
-                                    .frame(width: cellWidth, height: TimetableConstants.cellHeight)
-                                    .border(Color.gray.opacity(0.3), width: 0.5)
-                            }
-                        }
-                    }
-                }
-                
-                // 🟨 강의 블록
-                ForEach(lectures, id: \.self) { lecture in
-                    let blocks = createLectureBlock(lecture: lecture, cellWidth: cellWidth, viewStartHour: displayHours.first ?? 0)
-
-                    ForEach(blocks.indices, id: \.self) { index in
-                        blocks[index]
-                    }
-                }
-            }
-        }
-        .frame(height: CGFloat(displayHours.count) * TimetableConstants.cellHeight + TimetableConstants.cornerCellHeight)
-    }
-    
-    // createLectureBlock 함수는 이전 답변과 동일
-    func createLectureBlock(lecture: ExternalLecture, cellWidth: CGFloat, viewStartHour: Int) -> [AnyView] {
-        let times = lecture.time.components(separatedBy: ",")
-        var views: [AnyView] = []
-        
-        let colorIndex = abs(lecture.name.hashValue) % TimetableConstants.lectureColors.count
-        let lectureColor = TimetableConstants.lectureColors[colorIndex]
-
-        for time in times {
-            guard let dayPrefix = time.first.map(String.init),
-                  let xIndex = TimetableConstants.days.firstIndex(of: dayPrefix) else { continue }
-            
-            let timeRange = time.dropFirst()
-            let parts = timeRange.split(separator: "-")
-            guard parts.count == 2,
-                  let startInt = Int(parts[0]),
-                  let endInt = Int(parts[1]) else { continue }
-
-            let startHourValue = startInt / 100
-            let startMinute = startInt % 100
-            let endHourValue = endInt / 100
-            let endMinute = endInt % 100
-            
-            let startTotalMinutes = startHourValue * 60 + startMinute
-            let endTotalMinutes = endHourValue * 60 + endMinute
-            
-            let viewStartMinutes = viewStartHour * 60
-            let relativeStartMinutes = startTotalMinutes - viewStartMinutes
-            let durationMinutes = endTotalMinutes - startTotalMinutes
-            
-            let height = CGFloat(durationMinutes) / 60.0 * TimetableConstants.cellHeight
-            let x = CGFloat(xIndex) * cellWidth + TimetableConstants.cornerCellWidth + cellWidth / 2
-            let y = CGFloat(relativeStartMinutes) / 60.0 * TimetableConstants.cellHeight + TimetableConstants.cornerCellHeight + height / 2
-
-            let block = AnyView(
-                VStack(spacing: 2) {
-                    Text(lecture.name)
-                        .font(.caption2)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.5)
-                    Text(lecture.professor)
-                        .font(.caption2)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.5)
-                }
-                .padding(2)
-                .frame(width: cellWidth - 4, height: height - 4)
-                .background(lectureColor.opacity(0.7))
-                .cornerRadius(4)
-                .overlay(RoundedRectangle(cornerRadius: 4).stroke(lectureColor.opacity(0.9), lineWidth: 1))
-                .position(x: x, y: y)
-            )
-
-            views.append(block)
-        }
-
-        return views
-    }
-}

@@ -14,20 +14,9 @@ struct CustomCreateTimetableView: View {
     
     @Binding var isPresented: Bool
     
-    // 검색에 필요
-    @State private var searchText: String = ""
-    @State private var searchTextDebounced: String = ""
-    @State private var debounceCancellable: AnyCancellable? = nil
-    
-    @State private var canEdit: Bool = true
-    @State private var isDeleteAlertPresented: Bool = false
-    
     // 메인시간표로 저장할지
     @State private var isMainTimetableSet: Bool = false
-    
     @State var showAlert: Bool = false
-    @State var alertMessage: String = ""
-    
     
     var body: some View {
         ScrollView {
@@ -50,48 +39,29 @@ struct CustomCreateTimetableView: View {
                 .font(.title2)
                 
                 // 강의 추가, 삭제 바
-                LectureSearchBarWithUsedtime(searchText: $searchText, selectedLectures: $viewModel.customTimetable, searchedLectures: $viewModel.searchLectures, usedTime: $viewModel.usedTime)
-                    .zIndex(1)
-                
+                LectureSearchBarWithUsedtime(viewModel: viewModel, selectedLectures: $viewModel.customTimetableLectures, usedTime: $viewModel.usedTime)
                 
                 // 시간표 시각화
                 EditableTimetableView(
-                    lectures: $viewModel.customTimetable,
-                    canEdit: $canEdit,
-                    isAlertPresented: $isDeleteAlertPresented
+                    lectures: $viewModel.customTimetableLectures,
+                    canEdit: .constant(true)
                 )
                 .padding(.horizontal, -10)
             }
             .padding(.horizontal, 20)
         }
-        .onChange(of: searchText) { newValue in
-            debounceCancellable?.cancel()
-            debounceCancellable = Just(newValue)
-                .delay(for: .milliseconds(500), scheduler: RunLoop.main)
-                .sink { debouncedValue in
-                    searchTextDebounced = debouncedValue
-                    if !debouncedValue.trimmingCharacters(in: .whitespaces).isEmpty {
-                        viewModel.searchLectures(keyword: debouncedValue)
-                    }
-                }
-        }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
-                    // 시간표 저장
-                    let year = viewModel.currentYearSemester.year
-                    let semester = viewModel.currentYearSemester.semester
-                    viewModel.saveTimetable(year: year, semester: semester, timeTableName: "기본", isRepresent: isMainTimetableSet, selectedLectureIds: viewModel.customTimetable.map{ $0.id }) {
-//                        isPresented = false
+                    viewModel.saveTimetable(createdTimetable: CreatedTimetable(year: "2025", semester: "2", timeTableName: "custom", isRepresent: isMainTimetableSet, lectures: viewModel.customTimetableLectures)) {
                         showAlert = true
-                        alertMessage = "저장되었습니다."
                     }
                 }, label: {
                     Text("저장")
                 })
             }
         }
-        .alert(alertMessage, isPresented: $showAlert) {
+        .alert("저장되었습니다", isPresented: $showAlert) {
             Button("확인", role: .cancel) {
                 isPresented = false
             }

@@ -10,10 +10,7 @@ import Combine
 
 struct SavedTimetableView: View {
     @ObservedObject var timetableViewModel: TimetableViewModel
-
-    @State private var searchText: String = ""
-    @State private var searchTextDebounced: String = ""
-    @State private var debounceCancellable: AnyCancellable? = nil
+    @StateObject var generateTimetableViewModel: GenerateTimetableViewModel = GenerateTimetableViewModel()
 
     @State private var selectedIndex: Int = 0
     @State private var canEdit = false
@@ -43,7 +40,7 @@ struct SavedTimetableView: View {
 
                         if canEdit {
                             Button("취소") {
-                                timetableViewModel.getTimetablesByYearAndSemester(year: timetableViewModel.selectedYear, semester: timetableViewModel.selectedSemester) {
+                                timetableViewModel.getTimetablesByYearAndSemester(year: "2025", semester: "2") {
                                     canEdit = false
                                 }
                             }.foregroundStyle(.red)
@@ -51,8 +48,7 @@ struct SavedTimetableView: View {
                             Button("완료") {
                                 canEdit = false
                                 let currentTimetable = timetableViewModel.timetableAboutYearAndSemester[selectedIndex]
-                                let lectureIds = currentTimetable.lectures.map { $0.id }
-                                timetableViewModel.putTimetableLectures(timetableId: currentTimetable.id, lectureIds: lectureIds) {}
+                                timetableViewModel.putTimetableLectures(timetableId: currentTimetable.id, lectures: currentTimetable.lectures) {}
                             }
                         } else {
                             Button("편집") {
@@ -66,7 +62,7 @@ struct SavedTimetableView: View {
                             Button(action: {
                                 let timetableId = timetableViewModel.timetableAboutYearAndSemester[selectedIndex].id
                                 timetableViewModel.patchMainTimetable(timetableId: timetableId) {
-                                    timetableViewModel.getTimetablesByYearAndSemester(year: "2025", semester: "1") {}
+                                    timetableViewModel.getTimetablesByYearAndSemester(year: "2025", semester: "2") {}
                                 }
                             }) {
                                 Image(systemName: timetableViewModel.timetableAboutYearAndSemester[selectedIndex].isRepresent ? "star.fill" : "star")
@@ -86,7 +82,7 @@ struct SavedTimetableView: View {
 
                     if canEdit {
                         LectureSearchBarWithUsedtime(
-                            searchText: $searchText,
+                            viewModel: generateTimetableViewModel,
                             selectedLectures: Binding(
                                 get: { timetableViewModel.selectedLectures },
                                 set: { newLectures in
@@ -94,11 +90,9 @@ struct SavedTimetableView: View {
                                     timetableViewModel.timetableAboutYearAndSemester[selectedIndex].lectures = newLectures
                                 }
                             ),
-                            searchedLectures: $timetableViewModel.searchLectures,
                             usedTime: $timetableViewModel.usedTime
                         )
                         .padding(.horizontal, 20)
-                        .zIndex(1)
                     }
 
                     TabView(selection: $selectedIndex) {
@@ -106,7 +100,7 @@ struct SavedTimetableView: View {
                             EditableTimetableView(
                                 lectures: $timetableViewModel.timetableAboutYearAndSemester[index].lectures,
                                 canEdit: $canEdit,
-                                isAlertPresented: $isAlertPresented
+                                isAlertPresented: false
                             )
                             .tag(index)
                         }
@@ -120,7 +114,7 @@ struct SavedTimetableView: View {
                 Button("삭제", role: .destructive) {
                     let timetableId = timetableViewModel.timetableAboutYearAndSemester[selectedIndex].id
                     timetableViewModel.deleteTimetable(timetableId: timetableId) {
-                        timetableViewModel.getTimetablesByYearAndSemester(year: "2025", semester: "1") {
+                        timetableViewModel.getTimetablesByYearAndSemester(year: "2025", semester: "2") {
                             let newCount = timetableViewModel.timetableAboutYearAndSemester.count
                             if selectedIndex >= newCount && newCount > 0 {
                                 selectedIndex = newCount - 1
@@ -139,15 +133,6 @@ struct SavedTimetableView: View {
                         canEdit = false
                     }
                 }
-            }
-            .onChange(of: searchText) { newValue in
-                debounceCancellable?.cancel()
-                debounceCancellable = Just(newValue)
-                    .delay(for: .milliseconds(500), scheduler: RunLoop.main)
-                    .sink { debouncedValue in
-                        searchTextDebounced = debouncedValue
-                        timetableViewModel.searchLectures(keyword: debouncedValue)
-                    }
             }
         }
     }

@@ -22,6 +22,9 @@ struct Token: Codable {
     var refresh: String
 }
 
+func studentIdToEmail(studentId: String) -> String {
+    return "\(studentId)@g.skku.edu"
+}
 
 
 

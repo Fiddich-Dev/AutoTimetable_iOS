@@ -8,6 +8,11 @@
 import Foundation
 import Moya
 
+// 응답확인하기
+//let rawString = String(data: response.data, encoding: .utf8)
+//print("서버 응답: \(rawString ?? "nil")")
+//print(response)
+
 class FriendViewModel: ObservableObject {
     
     private var provider: MoyaProvider<FriendApi>!
@@ -17,6 +22,12 @@ class FriendViewModel: ObservableObject {
     @Published var myFriends: [Friend] = []
     @Published var pendingFriends: [Friend] = []
     @Published var findFriends: [SearchMemberDTO] = []
+    
+    // 강의 검색 공통 페이징 옵션
+    @Published var searchedFriends: [Lecture] = []
+    @Published var isSearchFriendsLoading = false
+    @Published var isSearchFriendsLastPage = false
+    var searchFriendsPage: Int = 0
     
     
     @Published var selectedFriends: [Friend] = []
@@ -37,7 +48,11 @@ class FriendViewModel: ObservableObject {
                 
                 switch result {
                 case .success(let response):
+                    
+                    let rawString = String(data: response.data, encoding: .utf8)
+                    print("서버 응답: \(rawString ?? "nil")")
                     print(response)
+                    
                     if let apiResponse = try? response.map(ApiResponse<[Friend]>.self), let friends = apiResponse.content {
                         
                         self.myFriends = friends
@@ -78,29 +93,47 @@ class FriendViewModel: ObservableObject {
         }
     }
     
-    func searchFriend(studentId: String) {
+    func searchFriend(studentId: String, page: Int, size: Int) {
         self.isLoading = true
-        provider.request(.searchFriend(studentId: studentId)) { result in
+        provider.request(.searchFriend(studentId: studentId, page: page, size: size)) { result in
             DispatchQueue.main.async {
                 
                 defer { self.isLoading = false }
                 
                 switch result {
                 case .success(let response):
+                    
+                    let rawString = String(data: response.data, encoding: .utf8)
+                    print("서버 응답: \(rawString ?? "nil")")
                     print(response)
+                    
                     if let apiResponse = try? response.map(ApiResponse<[SearchMemberDTO]>.self), let findFriends = apiResponse.content {
                         
-                        self.findFriends = findFriends
-                        print("✅ searchFriend매핑 성공")
+                        if(findFriends.isEmpty) {
+                            self.isSearchFriendsLastPage = true
+                            print("✅ 마지막 페이지")
+                        } else {
+                            self.findFriends.append(contentsOf: findFriends)
+                            print("✅ searchFriend매핑 성공")
+                        }
                     }
                     else {
                         print("🚨 searchFriend매핑 실패")
+                        self.resetSearchState()
                     }
                 case .failure:
                     print("🚨 searchFriend네트워크 요청 실패")
+                    self.resetSearchState()
                 }
             }
         }
+    }
+    
+    func resetSearchState() {
+        self.findFriends = []
+        self.searchFriendsPage = 0
+        self.isSearchFriendsLoading = false
+        self.isSearchFriendsLastPage = false
     }
     
     func rejectFriendRequest(requesterId: Int64, completion: @escaping () -> Void) {

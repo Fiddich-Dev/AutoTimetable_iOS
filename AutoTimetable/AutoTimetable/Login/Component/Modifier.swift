@@ -23,22 +23,31 @@ struct MyTextFieldModifier: ViewModifier {
     }
 }
 
+
 struct MyButtonModifier: ViewModifier {
-    
     var isDisabled: Bool
-    
-    func body(content: Content) -> some View{
-        content
+    @GestureState private var isPressed = false
+
+    func body(content: Content) -> some View {
+        let pressGesture = DragGesture(minimumDistance: 0)
+            .updating($isPressed) { _, state, _ in
+                state = true
+            }
+
+        return content
             .foregroundStyle(Color.white)
             .padding(.vertical, 16)
             .frame(maxWidth: .infinity)
             .background(isDisabled ? Color.gray.opacity(0.5) : Color.blue)
             .cornerRadius(20)
+            .scaleEffect(isPressed ? 0.95 : 1.0)
+            .opacity(isPressed ? 0.9 : 1.0)
+//            .gesture(pressGesture)
+            .contentShape(Rectangle())
+            .animation(.easeInOut(duration: 0.1), value: isPressed)
+            .disabled(isDisabled)
     }
 }
 
-func studentIdToEmail(studentId: String) -> String {
-//    return "\(studentId)@g.skku.edu"
-    return "hiws99@naver.com"
-}
+
 

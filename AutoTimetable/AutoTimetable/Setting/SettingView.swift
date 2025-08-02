@@ -14,12 +14,13 @@ struct SettingView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
 
     var body: some View {
-        NavigationView {
             List {
                 Section(header: Text("계정")) {
-//                    NavigationLink("비밀번호 변경") {
-//                        ChangePasswordView()
-//                    }
+                    NavigationLink("비밀번호 변경") {
+                        ChangePasswordView()
+                    }
+                    .foregroundColor(.blue)
+                    
                     Button("로그아웃") {
                         showLogoutAlert = true
                     }
@@ -52,7 +53,6 @@ struct SettingView: View {
                     }
                 }
             }
-            .navigationTitle("설정")
             .alert("로그아웃 하시겠습니까?", isPresented: $showLogoutAlert) {
                 Button("로그아웃", role: .destructive) {
                     authViewModel.logout()
@@ -67,7 +67,6 @@ struct SettingView: View {
                 }
                 Button("취소", role: .cancel) { }
             }
-        }
     }
 }
 
@@ -135,26 +134,6 @@ struct ChangePasswordView: View {
     }
 }
 
-struct InquiryView: View {
-    @State private var title = ""
-    @State private var message = ""
-    
-    var body: some View {
-        Form {
-            Section(header: Text("제목")) {
-                TextField("제목 입력", text: $title)
-            }
-            Section(header: Text("내용")) {
-                TextEditor(text: $message)
-                    .frame(height: 150)
-            }
-            Button("문의 보내기") {
-                // 문의 전송 로직
-            }
-        }
-        .navigationTitle("1:1 문의")
-    }
-}
 
 
 //#Preview {

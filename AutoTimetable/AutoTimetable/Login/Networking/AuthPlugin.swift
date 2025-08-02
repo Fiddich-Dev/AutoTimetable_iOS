@@ -8,7 +8,6 @@
 import Foundation
 import Moya
 
-
 final class AuthPlugin: PluginType {
     
     let accessTokenKey = "accessToken"
@@ -20,8 +19,6 @@ final class AuthPlugin: PluginType {
     init(viewModel: AuthViewModel?) {
         self.viewModel = viewModel
     }
-    
-    
     
     // 요청이 시작될 때 호출
     func willSend(_ request: RequestType, target: TargetType) {
@@ -35,86 +32,82 @@ final class AuthPlugin: PluginType {
             print("응답을 받았습니다: \(response.statusCode)")
             
             if response.statusCode == 401 {
+                // 이미 재시도한 요청인지 확인
+                if let retried = (target as? RetriableTargetType)?.hasRetried, retried {
+                    print("🔁 이미 재시도한 요청입니다. 무한 루프 방지를 위해 로그아웃 처리")
+                    forceLogout()
+                    return
+                }
+                
+                // 토큰 재발급 시도
                 reissueToken { [weak self] success in
                     guard let self = self else { return }
                     if success {
-                        // 토큰 재발급 성공 시 원래 요청을 다시 시도할 수 있습니다.
-                        self.retryOriginalRequest(target: target)
+                        self.retryOriginalRequest(target: target, hasRetried: true)
                     } else {
-                        // 토큰 재발급 실패 시 로그아웃 처리
                         self.forceLogout()
                     }
                 }
             }
             
-            
         case .failure(let error):
-            print("오류가 발생했습니다: \(error.localizedDescription)")
-            
+            print("❌ 오류 발생: \(error.localizedDescription)")
             viewModel?.networkErrorAlert = true
-            
-            // 실패 했을떄 리프레쉬 토큰으로 엑세스 토큰 재발급후 다시 시도
-            // 그 요청이 실패하면 강제 로그아웃
-            
-            // 네트워크 오류도 고려
         }
     }
     
-    
-    // 토큰 재발급 메서드
+    // MARK: - 토큰 재발급
     private func reissueToken(completion: @escaping (Bool) -> Void) {
         provider.request(.reissueToken) { result in
             switch result {
             case .success(let response):
-                
-                print(response)
-                
-                if let apiResponse = try? response.map(ApiResponse<Token>.self), let token = apiResponse.content {
-                    print("regenerateToken매핑 성공🚨")
-                    print("재발급Access Token: \(token.access)")
-                    print("재발급Refresh Token: \(token.refresh)")
+                if let apiResponse = try? response.map(ApiResponse<Token>.self),
+                   let token = apiResponse.content {
+                    print("🚨 재발급 토큰 매핑 성공")
+                    print("access: \(token.access)")
+                    print("refresh: \(token.refresh)")
                     
                     self.saveToken(token.access)
                     self.saveRefreshToken(token.refresh)
-                }
-                else {
-                    print("regenerateToken매핑 실패🚨")
+                    completion(true)
+                } else {
+                    print("🚨 토큰 매핑 실패")
+                    completion(false)
                 }
             case .failure:
-                print("regenerateToken요청 실패🚨")
-                
+                print("🚨 토큰 재발급 요청 실패")
+                completion(false)
             }
         }
     }
     
-    // 원래 요청을 다시 시도하는 메서드
-    private func retryOriginalRequest(target: TargetType) {
+    // MARK: - 원래 요청 재시도
+    private func retryOriginalRequest(target: TargetType, hasRetried: Bool, completion: ((Result<Response, MoyaError>) -> Void)? = nil) {
+        let retryTarget = RetriableTarget(original: target, hasRetried: hasRetried)
         let retryProvider = MoyaProvider<MultiTarget>(plugins: [self])
         
-        retryProvider.request(MultiTarget(target)) { result in
+        retryProvider.request(MultiTarget(retryTarget)) { result in
             switch result {
             case .success(let response):
                 print("🔁 재시도 성공: \(response.statusCode)")
+                completion?(.success(response))
             case .failure(let error):
                 print("❌ 재시도 실패: \(error.localizedDescription)")
                 self.forceLogout()
+                completion?(.failure(error))
             }
         }
     }
     
-    // 로그아웃 처리 메서드
+    // MARK: - 로그아웃 처리
     private func forceLogout() {
-        // 로그아웃 처리 (예: 사용자 세션 종료, UI 업데이트 등)
-        print("강제 로그아웃")
+        print("👋 로그아웃 처리됨")
         viewModel?.isLoggedIn = false
-        self.deleteToken()
-        self.deleteRefreshToken()
-        
+        deleteToken()
+        deleteRefreshToken()
     }
     
-    
-    
-    
+    // MARK: - 토큰 관리
     private func saveToken(_ token: String) {
         KeychainHelper.shared.save(token, forKey: accessTokenKey)
     }
@@ -138,6 +131,27 @@ final class AuthPlugin: PluginType {
     private func deleteRefreshToken() {
         KeychainHelper.shared.delete(forKey: refreshTokenKey)
     }
-    
-    
+}
+
+
+import Moya
+
+/// 재시도 여부를 표시할 수 있는 프로토콜
+protocol RetriableTargetType: TargetType {
+    var hasRetried: Bool { get }
+}
+
+import Moya
+
+/// 기존 TargetType을 감싸고, 재시도 여부를 포함하는 구조체
+struct RetriableTarget: RetriableTargetType {
+    let original: TargetType
+    let hasRetried: Bool
+
+    var baseURL: URL { original.baseURL }
+    var path: String { original.path }
+    var method: Moya.Method { original.method }
+    var sampleData: Data { original.sampleData }
+    var task: Task { original.task }
+    var headers: [String : String]? { original.headers }
 }

@@ -65,7 +65,7 @@ struct PasswordResetView: View {
                 }
                 
                 if(isAuthCodeSent) {
-                    Text("학교 웹메일로 인증번호가 전송되었습니다")
+                    Text("\(studentIdToEmail(studentId: studentId))로 인증번호가 전송되었습니다")
                     
                     HStack{
                         TextField("인증번호 입력", text: $authCode)

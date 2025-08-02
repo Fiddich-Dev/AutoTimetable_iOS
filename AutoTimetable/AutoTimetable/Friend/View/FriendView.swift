@@ -21,6 +21,10 @@ struct FriendView: View {
         
         ZStack {
             
+            if(friendViewModel.isLoading) {
+                ProgressView()
+            }
+            
             ScrollView {
                 VStack {
                     HStack {
@@ -89,9 +93,9 @@ struct FriendView: View {
                 .padding(.horizontal, 20)
             }
             
-            if(friendViewModel.isLoading) {
-                loadingView()
-            }
+//            if(friendViewModel.isLoading) {
+//                loadingView()
+//            }
         }
     }
     

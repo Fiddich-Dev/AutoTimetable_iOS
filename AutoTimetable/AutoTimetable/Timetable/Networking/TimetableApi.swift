@@ -12,19 +12,22 @@ import Moya
 
 
 enum TimetableApi {
-    case saveTimetable(year: String, semester: String, timeTableName: String, isRepresent: Bool, selectedLectureIds: [Int64])
+    case saveTimetable(createdTimetable: CreatedTimetable)
     case getTimetablesByYearAndSemester(year: String, semester: String)
     case getYearAndSemester
-    case generateTimetable(targetMajorCnt: Int, targetCultureCnt: Int, likeLectureCode: [Int64], dislikeLectureCode: [Int64], categoryIds: [Int64], usedTime: [[Int]], minCredit: Int, maxCredit: Int, preferMorning: Bool, preferAfternoon: Bool)
-    case putTimetableLectures(timetableId: Int64, lectureIds: [Int64])
+    case generateTimetable(generateTimetableOption: GenerateTimetableOption)
+    case putTimetableLectures(timetableId: Int64, lectures: [Lecture])
     case deleteTimetable(timetableId: Int64)
     case getMainTimetableByYearAndSemester(year: String, semester: String)
     case patchMainTimetable(timetableId: Int64)
     case getAllEverytimetable(url: String)
-    case saveEverytimetable(year: String, semester: String, timetableName: String, isRepresent: Bool, lectures: [ExternalLecture])
+    case saveEverytimetable(year: String, semester: String, timetableName: String, isRepresent: Bool, lectures: [Lecture])
 //    case getAllLectures
     case searchLectures(keyword: String)
     case getAllDepartment(year: String, semester: String)
+    
+    case getEverytimeCategories(year: String, semester: String)
+    case searchEverytimeLectures(type: String, keyword: String, year: String ,semester: String, page: Int, size: Int)
 }
 
 
@@ -47,7 +50,7 @@ extension TimetableApi: TargetType {
             return "/timetables/periods"
         case .generateTimetable:
             return "/timetables/auto-generate"
-        case .putTimetableLectures(let timetableId, let lectureIds):
+        case .putTimetableLectures(let timetableId, let lectures):
             return "/timetables/\(timetableId)"
         case .deleteTimetable(let timetableId):
             return "/timetables/\(timetableId)"
@@ -56,7 +59,7 @@ extension TimetableApi: TargetType {
         case .patchMainTimetable:
             return "/timetables/main"
         case .getAllEverytimetable:
-            return "/timetables/everytime"
+            return "/everytime/timetables"
         case .saveEverytimetable:
             return "/timetables/everytime"
 //        case .getAllLectures:
@@ -65,6 +68,11 @@ extension TimetableApi: TargetType {
             return "/lectures/search"
         case .getAllDepartment:
             return "/categories"
+            
+        case .getEverytimeCategories:
+            return "/everytime/categories"
+        case .searchEverytimeLectures:
+            return "/everytime/lectures/search"
         }
     }
     
@@ -79,9 +87,9 @@ extension TimetableApi: TargetType {
             return .get
         case .generateTimetable:
             return .post
-        case .putTimetableLectures(let timetableId, let lectureIds):
+        case .putTimetableLectures:
             return .put
-        case .deleteTimetable(let timetableId):
+        case .deleteTimetable:
             return .delete
         case .getMainTimetableByYearAndSemester:
             return .get
@@ -97,22 +105,28 @@ extension TimetableApi: TargetType {
             return .get
         case .getAllDepartment:
             return .get
+        case .getEverytimeCategories:
+            return .get
+        case .searchEverytimeLectures:
+            return .get
         }
     }
+    
+    
     
     var task: Moya.Task {
         switch self {
             
-        case .saveTimetable(let year, let semester, let timeTableName, let isRepresent, let selectedLectureIds):
-            return .requestParameters(parameters: ["year": year, "semester": semester, "timeTableName": timeTableName, "isRepresent": isRepresent, "selectedLectureIds": selectedLectureIds], encoding: JSONEncoding.default)
+        case .saveTimetable(let timetable):
+            return .requestJSONEncodable(timetable)
         case .getTimetablesByYearAndSemester(year: let year, semester: let semester):
             return .requestParameters(parameters: ["year": year, "semester": semester], encoding: URLEncoding.default)
         case .getYearAndSemester:
             return .requestPlain
-        case .generateTimetable(let targetMajorCnt, let targetCultureCnt, let likeLectureCode, let dislikeLectureCode, let categoryIds, let usedTime, let minCredit, let maxCredit, let preferMorning, let preferAfternoon):
-            return .requestParameters(parameters: ["targetMajorCnt": targetMajorCnt, "targetCultureCnt": targetCultureCnt, "likeLectureCode": likeLectureCode, "dislikeLectureCode": dislikeLectureCode, "categoryIds": categoryIds, "usedTime": usedTime, "minCredit": minCredit, "maxCredit": maxCredit, "preferMorning": preferMorning, "preferAfternoon": preferAfternoon], encoding: JSONEncoding.default)
-        case .putTimetableLectures(timetableId: let timetableId, lectureIds: let lectureIds):
-            return .requestParameters(parameters: ["lectureIds": lectureIds], encoding: JSONEncoding.default)
+        case .generateTimetable(let generateTimetableOption):
+            return .requestJSONEncodable(generateTimetableOption)
+        case .putTimetableLectures(let timetableId, let lectures):
+            return .requestJSONEncodable(lectures)
         case .deleteTimetable:
             return .requestPlain
         case .getMainTimetableByYearAndSemester(let year, let semester):
@@ -124,8 +138,8 @@ extension TimetableApi: TargetType {
         case .saveEverytimetable(let year, let semester, let timetableName, let isRepresent, let lectures):
             let lecturesArray = lectures.map { lecture in
                 return [
-                    "subjectId": lecture.subjectId,
-                    "code": lecture.code,
+                    "subjectId": lecture.id,
+                    "code": lecture.codeSection,
                     "codeSection": lecture.codeSection,
                     "name": lecture.name,
                     "professor": lecture.professor,
@@ -134,12 +148,23 @@ extension TimetableApi: TargetType {
                 ]
             }
             return .requestParameters(parameters: ["year": year, "semester": semester, "timetableName": timetableName, "isRepresent": isRepresent, "lectures": lecturesArray], encoding: JSONEncoding.default)
-//        case .getAllLectures:
-//            return .requestPlain
+            //        case .getAllLectures:
+            //            return .requestPlain
         case .searchLectures(let keyword):
             return .requestParameters(parameters: ["keyword": keyword], encoding: URLEncoding.default)
         case .getAllDepartment(let year, let semester):
             return .requestParameters(parameters: ["year": year, "semester": semester], encoding: URLEncoding.default)
+        case .getEverytimeCategories(year: let year, semester: let semester):
+            return .requestParameters(parameters: ["year": year, "semester": semester], encoding: URLEncoding.default)
+        case .searchEverytimeLectures(let type, let keyword, let year, let semester, let page, let size):
+            return .requestParameters(parameters:
+                                        ["type": type,
+                                         "keyword": keyword,
+                                         "year": year,
+                                         "semester": semester,
+                                         "page": page,
+                                         "size": size
+                                        ], encoding: URLEncoding.default)
         }
     }
     
@@ -163,7 +188,7 @@ extension TimetableApi: TargetType {
         case .patchMainTimetable:
             return ["Authorization": "Bearer \(getToken() ?? "asd")"]
         case .getAllEverytimetable:
-            return ["Authorization": "Bearer \(getToken() ?? "asd")"]
+            return ["Content-type": "application/json"]
         case .saveEverytimetable:
             return ["Authorization": "Bearer \(getToken() ?? "asd")"]
 //        case .getAllLectures:
@@ -171,6 +196,10 @@ extension TimetableApi: TargetType {
         case .searchLectures:
             return ["Authorization": "Bearer \(getToken() ?? "asd")"]
         case .getAllDepartment:
+            return ["Content-type": "application/json"]
+        case .getEverytimeCategories:
+            return ["Content-type": "application/json"]
+        case .searchEverytimeLectures:
             return ["Content-type": "application/json"]
         }
     }

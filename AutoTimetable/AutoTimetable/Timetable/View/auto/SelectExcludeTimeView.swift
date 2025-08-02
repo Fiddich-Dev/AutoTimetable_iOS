@@ -7,31 +7,6 @@
 
 import SwiftUI
 
-struct TimeSlot: Hashable {
-    let dayIndex: Int
-    let hour: Int
-    
-    func toTimeString() -> String {
-        let dayMap = ["월", "화", "수", "목", "금", "토", "일"]
-
-        let startMinute = hour * 60
-        let endMinute = startMinute + 60
-
-        func formatTime(_ totalMinutes: Int) -> String {
-            let h = totalMinutes / 60
-            let m = totalMinutes % 60
-            return String(format: "%02d%02d", h, m)
-        }
-
-        let day = dayMap[dayIndex]
-        let startTime = formatTime(startMinute)
-        let endTime = formatTime(endMinute)
-        
-        print("\(day)\(startTime)-\(endTime)")
-
-        return "\(day)\(startTime)-\(endTime)"
-    }
-}
 
 
 struct SelectExcludeTimeView: View {
@@ -58,9 +33,28 @@ struct SelectExcludeTimeView: View {
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink(destination: TimetableOptionView(viewModel: viewModel, isPresented: $isPresented)) {
-                    Text("다음")
+                NavigationLink(destination: MakedTimetableView(viewModel: viewModel, isPresented: $isPresented)) {
+                    Text("완료")
                 }
+                .simultaneousGesture(TapGesture().onEnded {
+                    
+                    var generateTimetableOption = GenerateTimetableOption(year: "2025",
+                                                                          semester: "2",
+                                                                          targetMajorCnt: viewModel.targetMajorCnt,
+                                                                          targetCultureCnt: viewModel.targetCultureCnt,
+                                                                          likeOfficialLectureCodeSection: viewModel.selectedLikeLectures.map { $0.codeSection },
+                                                                          dislikeOfficialLectureCodeSection: viewModel.selectedDislikeLectures.map { $0.codeSection },
+                                                                          categoryIds: viewModel.selectedCategories.map { $0.id },
+                                                                          usedTime: viewModel.usedTime,
+                                                                          minCredit: viewModel.minCredit,
+                                                                          maxCredit: viewModel.maxCredit,
+                                                                          preferMorning: viewModel.preferAfternoon,
+                                                                          preferAfternoon: viewModel.preferAfternoon
+                    )
+                    
+                    // 시간표 생성 알고리즘
+                    viewModel.generateTimetable(generateTimetableOption: generateTimetableOption)
+                })
             }
         }
     }

@@ -12,22 +12,24 @@ class AuthViewModel: ObservableObject {
     
     private var provider: MoyaProvider<AuthAPI>!
     
-    @Published var isLoading: Bool = false
+    // 현재 학년도
+    var currentYear = ""
+    var currentSemester = ""
     
-    @Published var networkErrorAlert = false
-    
-    @Published var isLoggedIn: Bool = false
-    
-    @Published var showAlert: Bool = false
-    @Published var alertMessage: String = ""
-
+    // jwt가져오는 key
     let accessTokenKey = "accessToken"
     let refreshTokenKey = "refreshToken"
     
+    // 앱 상태
+    @Published var isLoading: Bool = false
+    @Published var networkErrorAlert = false
+    @Published var isLoggedIn: Bool = false
+    @Published var showAlert: Bool = false
+    @Published var alertMessage: String = ""
+
     init() {
-        print("authViewModel init")
-        deleteToken()
-        deleteRefreshToken()
+        // 현재 학년도 조회
+        loadCurrentSemester()
         // 플러그인 주입
         let authPlugin = AuthPlugin(viewModel: self)
         self.provider = MoyaProvider<AuthAPI>(plugins: [authPlugin])
@@ -64,6 +66,7 @@ class AuthViewModel: ObservableObject {
                     }
                 case .failure:
                     print("🚨 logIn네트워크 요청 실패")
+                    self.networkErrorAlert = true
                 }
             }
         }
@@ -158,12 +161,8 @@ class AuthViewModel: ObservableObject {
     }
     
     func checkDuplicatedMember(studentId: String, completion: @escaping (Bool) -> Void) {
-//        self.isLoading = true
         provider.request(.checkDuplicatedMember(studentId: studentId)) { result in
             DispatchQueue.main.async {
-                
-//                defer { self.isLoading = false }
-                
                 switch result {
                 case .success(let response):
                     if let apiResponse = try? response.map(ApiResponse<EmptyContent>.self) {
@@ -203,7 +202,7 @@ class AuthViewModel: ObservableObject {
                         
                 case .failure:
                     print("🚨 logout네트워크 요청 실패")
-                    
+                    self.forceLogout()
                 }
             }
         }
@@ -231,7 +230,37 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    // 토큰관리 메소드
+    private func forceLogout() {
+        // 로그아웃 처리 (예: 사용자 세션 종료, UI 업데이트 등)
+        print("강제 로그아웃")
+        self.isLoggedIn = false
+        self.deleteToken()
+        self.deleteRefreshToken()
+    }
+    
+    // MARK: 현재 학년도 가져오기
+    private func loadCurrentSemester() {
+        let date = Date()
+        let calendar = Calendar.current
+        let year = calendar.component(.year, from: date)
+        let month = calendar.component(.month, from: date)
+        
+        self.currentYear = String(year)
+
+        switch month {
+        case 1...6:
+            self.currentSemester = "1"
+        case 7...12:
+            self.currentSemester = "2"
+        default:
+            self.currentSemester = "99"
+        }
+        
+        print("\(self.currentYear)년 \(self.currentSemester)학기")
+        
+    }
+    
+    // MARK: 토큰관리 메소드
     private func saveToken(_ token: String) {
         KeychainHelper.shared.save(token, forKey: accessTokenKey)
     }

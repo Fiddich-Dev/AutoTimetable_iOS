@@ -19,14 +19,14 @@ struct ContentView: View {
         NavigationView {
             TabView(selection: $selectedTab) {
                 
-                HomeView()
+                HomeView(authViewModel: authViewModel)
                     .tabItem {
                         Image(systemName: "house.fill")
                         Text("홈")
                     }
                     .tag(Tab.home)
                 
-                TimetableView2(authViewModel: authViewModel)
+                TimetableTabView(authViewModel: authViewModel)
                     .tabItem {
                         Image(systemName: "calendar")
                         Text("시간표")

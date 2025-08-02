@@ -15,8 +15,7 @@ enum FriendApi {
     case acceptFriendRequest(requesterId: Int64)
     case rejectFriendRequest(requesterId: Int64)
     case deleteFriend(friendId: Int64)
-    case searchFriend(studentId: String)
-    
+    case searchFriend(studentId: String, page: Int, size: Int)
     case compareLectureWithFriend(year: String, semester: String, memberIds: [Int64])
     case compareTimeWithFriend(year: String, semester: String, memberIds: [Int64])
 }
@@ -90,9 +89,8 @@ extension FriendApi: TargetType {
             return .requestParameters(parameters: ["requesterId": requesterId], encoding: URLEncoding.default)
         case .deleteFriend:
             return .requestPlain
-        case .searchFriend(let studentId):
-            return .requestParameters(parameters: ["keyword": studentId], encoding: URLEncoding.default)
-        
+        case .searchFriend(let studentId, let page, let size):
+            return .requestParameters(parameters: ["keyword": studentId, "page": page, "size": size], encoding: URLEncoding.default)
         case .compareLectureWithFriend(let year, let semester, let memberIds):
             return .requestParameters(parameters: ["year": year, "semester": semester, "memberIds": memberIds], encoding: JSONEncoding.default)
         case .compareTimeWithFriend(year: let year, semester: let semester, memberIds: let memberIds):
@@ -116,7 +114,6 @@ extension FriendApi: TargetType {
             return ["Authorization": "Bearer \(getToken() ?? "asd")"]
         case .searchFriend:
             return ["Authorization": "Bearer \(getToken() ?? "asd")"]
-        
         case .compareLectureWithFriend:
             return ["Authorization": "Bearer \(getToken() ?? "asd")"]
         case .compareTimeWithFriend:

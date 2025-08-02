@@ -31,8 +31,6 @@ struct SignUpView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text("회원가입")
-                    .font(.largeTitle)
                 
                 Text("학번")
                     .font(.title2)
@@ -64,7 +62,7 @@ struct SignUpView: View {
                 }
                 
                 if(isAuthCodeSent) {
-                    Text("학교 웹메일로 인증번호가 전송되었습니다")
+                    Text("\(studentIdToEmail(studentId: studentId))로 인증번호가 전송되었습니다")
                     
                     HStack{
                         TextField("인증번호 입력", text: $authCode)
@@ -136,17 +134,14 @@ struct SignUpView: View {
             .onChange(of: password) { _ in
                 validatePasswords()
                 confirmPasswordMatch()
-                print(isPasswordValid)
             }
             .onChange(of: confirmPassword) { _ in
                 confirmPasswordMatch()
-                print(passwordsMatch)
             }
-            .alert(authViewModel.alertMessage, isPresented: $authViewModel.showAlert) {
-                Button("확인", role: .cancel) { }
-            }
-            .scrollDismissesKeyboard(.interactively)
         }
+        .scrollDismissesKeyboard(.interactively)
+        .navigationTitle("회원가입")
+        .navigationBarTitleDisplayMode(.inline)
     }
     
     // 비밀번호 규칙 맞는지 확인

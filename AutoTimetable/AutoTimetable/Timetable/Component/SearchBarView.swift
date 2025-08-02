@@ -8,42 +8,42 @@
 
 import SwiftUI
 
-
-struct DepartmentSearchBar: View {
+// 학과 검색 바
+struct CategorySearchBar: View {
     
-    @Binding var allDepartments: [Department]
-    @Binding var selectedDepartments: [Department]
-    @Binding var searchText: String
+    @State private var searchText: String = ""
+    
+    @Binding var allCategories: [Category]
+    @Binding var selectedCategories: [Category]
+    
     @FocusState private var isFocused: Bool
     
-    
-
-    var filteredDepartments: [Department] {
+    var filteredCategories: [Category] {
         if searchText.isEmpty {
             return []
         } else {
-            return allDepartments.filter {$0.name.localizedCaseInsensitiveContains(searchText)}
+            return allCategories.filter {$0.name.localizedCaseInsensitiveContains(searchText)}
         }
     }
     
-    var departmentOverlay: some View {
+    var filteredCategoriesView: some View {
         Group {
-            if !filteredDepartments.isEmpty {
+            if !filteredCategories.isEmpty {
                 ScrollView {
                     VStack(spacing: 0) {
-                        ForEach(filteredDepartments, id: \.self) { department in
+                        ForEach(filteredCategories, id: \.self.id) { category in
                             Button(action: {
-                                if !selectedDepartments.contains(department) {
-                                    selectedDepartments.append(department)
+                                if !selectedCategories.contains(category) {
+                                    selectedCategories.append(category)
                                 }
                                 searchText = ""
                             }) {
                                 HStack {
-                                    Text(department.name)
+                                    Text(category.name)
                                     Spacer()
                                 }
                                 .padding()
-                                .background(Color.gray)
+                                .background(Color.gray.opacity(0.2))
                             }
                             .foregroundStyle(Color.black)
                             Divider()
@@ -52,28 +52,34 @@ struct DepartmentSearchBar: View {
                     .background(Color.white)
                     .cornerRadius(10)
                 }
-                .frame(height: 250)
+                .frame(maxHeight: 250)
                 .cornerRadius(10)
-                .offset(y: 54)
             }
         }
     }
-
+    
     var body: some View {
+        
         VStack(alignment: .leading, spacing: 12) {
-            TextField("전공/영역 을 검색하세요", text: $searchText)
-                .focused($isFocused)
-                .modifier(MyTextFieldModifier(isFocused: isFocused))
-                .zIndex(1)
+            
+            VStack(spacing: 0) {
+                TextField("전공/영역 을 검색하세요", text: $searchText)
+                    .focused($isFocused)
+                    .modifier(MyTextFieldModifier(isFocused: isFocused))
+                    .zIndex(1)
+                
+                filteredCategoriesView
+                
+            }
 
-            if !selectedDepartments.isEmpty {
+            if !selectedCategories.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
-                        ForEach(selectedDepartments, id: \.self) { department in
+                        ForEach(selectedCategories, id: \.self.id) { category in
                             HStack(spacing: 4) {
-                                Text(department.name)
+                                Text(category.name)
                                 Button(action: {
-                                    selectedDepartments.removeAll { $0 == department }
+                                    selectedCategories.removeAll { $0 == category }
                                 }) {
                                     Image(systemName: "xmark.circle.fill")
                                         .foregroundColor(.gray)
@@ -89,128 +95,150 @@ struct DepartmentSearchBar: View {
             }
 
         }
-        .overlay(alignment: .top) {
-            departmentOverlay
-                .zIndex(2)
-        }
     }
 }
 
 
-//struct AddLectureSearchBar: View {
-//    @Binding var searchText: String
-//    @Binding var allLectures: [Lecture]
-//    @Binding var selectedLectures: [Lecture]
-//
-//    @FocusState private var isFocused: Bool
-//    
-//    @ObservedObject var timetableViewModel: TimetableViewModel
-//
-//    var filteredLectures: [Lecture] {
-//        searchText.isEmpty ? [] : timetableViewModel.lectures.filter { $0.name.contains(searchText) }
-//    }
-//
-//    var body: some View {
-//        VStack(alignment: .leading, spacing: 12) {
-//            TextField("듣고 싶은 강의", text: $searchText)
-//                .focused($isFocused)
-//                .modifier(MyTextFieldModifier(isFocused: isFocused))
-//                .zIndex(1)
-//
-//            if !selectedLectures.isEmpty {
-//                ScrollView(.horizontal, showsIndicators: false) {
-//                    HStack(spacing: 8) {
-//                        ForEach(selectedLectures, id: \.self) { lecture in
-//                            HStack(spacing: 4) {
-//                                Text(lecture.name)
-//                                Button(action: {
-//                                    selectedLectures.removeAll { $0 == lecture }
-//                                    allLectures.append(lecture)
-//                                    timetableViewModel.emptyUsedTime(timeString: lecture.time)
-//                                }) {
-//                                    Image(systemName: "xmark.circle.fill")
-//                                        .foregroundColor(.gray)
-//                                }
-//                            }
-//                            .padding(.horizontal, 12)
-//                            .padding(.vertical, 6)
-//                            .background(Color.gray.opacity(0.2))
-//                            .cornerRadius(20)
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        .overlay(alignment: .top) {
-//            if !filteredLectures.isEmpty {
-//                ScrollView {
-//                    VStack(spacing: 0) {
-//                        ForEach(filteredLectures, id: \.self) { lecture in
-//                            Button(action: {
-//                                
-//                                if !selectedLectures.contains(lecture) {
-//                                    if !timetableViewModel.canAddLectureAboutTime(timeString: lecture.time) {
-//                                        print("시간이 겹칩니다.")
-//                                    }
-//                                    
-//                                    else {
-//                                        selectedLectures.append(lecture)
-//                                        allLectures.removeAll { $0 == lecture }
-//                                        timetableViewModel.fillUsedTime(timeString: lecture.time)
-//                                        searchText = ""
-//                                    }
-//                                }
-//                                
-//                                
-//                            }) {
-//                                VStack(alignment: .leading) {
-//                                    Text("\(lecture.name) - \(lecture.professor)")
-//                                    Text("\(lecture.codeSection)")
-//                                    Text(lecture.time)
-//                                }
-//                                .padding()
-//                                .frame(maxWidth: .infinity, alignment: .leading)
-//                                .background(Color.gray)
-//                                
-//                            }
-//                            .foregroundStyle(Color.black)
-//                            Divider()
-//                        }
-//                    }
-//                    .background(Color.white)
-//                    .cornerRadius(10)
-//                }
-//                .frame(height: 250)  // 최대 높이 제한, 필요에 따라 조절
-//                .cornerRadius(10)
-//                .offset(y: 54)
-//            }
-//        }
-//    }
-//}
-
-struct LectureSearchBar: View {
+struct LectureSearchBarWithoutUsedtime: View {
     
-    @Binding var searchText: String
-    @Binding var selectedLectures: [Lecture]
-    @Binding var searchedLectures: [Lecture]
-
+    @ObservedObject var viewModel: GenerateTimetableViewModel
+    
+    @State private var searchText: String = ""
+    @State private var searchType: String = "name"
+    
     @FocusState private var isFocused: Bool
-
+    
+    // 검색 기준 버튼 UI
+    var searchTypeButton: some View {
+        HStack(spacing: 8) {
+            ForEach(["name", "professor", "code"], id: \.self) { type in
+                Button(action: {
+                    searchType = type
+                }) {
+                    Text(displayName(for: type))
+                        .padding(.vertical, 6)
+                        .padding(.horizontal, 12)
+                        .background(searchType == type ? Color.blue : Color.gray.opacity(0.2))
+                        .foregroundColor(searchType == type ? .white : .black)
+                        .cornerRadius(10)
+                }
+            }
+        }
+    }
+    
+    // 검색 타입 문자열 → 사용자 친화적 이름
+    func displayName(for type: String) -> String {
+        switch type {
+        case "name": return "이름"
+        case "professor": return "교수"
+        case "code": return "코드"
+        default: return type
+        }
+    }
+    
+    // 검색 결과 뷰
+    var searchedLecturesView: some View {
+        Group {
+            if !viewModel.searchedLectures.isEmpty {
+                ScrollView {
+                    VStack(spacing: 0) {
+                        ForEach(viewModel.searchedLectures.indices, id: \.self) { index in
+                            LazyVStack(spacing: 0) {
+                                let lecture = viewModel.searchedLectures[index]
+                                
+                                Button(action: {
+                                    if !viewModel.selectedLectures.contains(lecture) {
+                                        viewModel.selectedLectures.append(lecture)
+                                        searchText = ""
+                                        viewModel.resetSearchState()
+                                    }
+                                }) {
+                                    VStack(alignment: .leading) {
+                                        Text("\(lecture.name) - \(lecture.professor) - \(lecture.credit)학점")
+                                        Text("\(lecture.codeSection)")
+                                        Text(lecture.time)
+                                    }
+                                    .padding()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .background(Color.gray.opacity(0.2))
+                                }
+                                .foregroundStyle(Color.black)
+                                .onAppear {
+                                    // 마지막 행에 도달하면
+                                    if(index == viewModel.searchedLectures.count - 3) {
+                                        // 마지막 페이지가 아닐때
+                                        if(!viewModel.isSearchLectureLoading && !viewModel.isSearchLectureLastPage) {
+                                            // 페이지를 증가시킨다
+                                            viewModel.searchLecturePage += 1
+                                            // 증가시킨 페이지로 추가 조회
+                                            viewModel.searchEverytimeLectures(type: searchType, keyword: searchText, year: "2025", semester: "2", page: viewModel.searchLecturePage, size: 50)
+                                        }
+                                    }
+                                }
+                                
+                                Divider()
+                            }
+                        }
+                        if(viewModel.isSearchLectureLoading) {
+                            ProgressView()
+                        }
+                    }
+                    .background(Color.white)
+                    .cornerRadius(10)
+                }
+                .frame(maxHeight: 250)
+                .cornerRadius(10)
+            }
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            TextField("강의 검색", text: $searchText)
-                .focused($isFocused)
-                .modifier(MyTextFieldModifier(isFocused: isFocused))
-                .zIndex(1)
+            searchTypeButton
+            
+            VStack(spacing: 0) {
+                HStack {
+                    TextField("강의 검색", text: $searchText)
+                        .focused($isFocused)
+                        .modifier(MyTextFieldModifier(isFocused: isFocused))
+                        .zIndex(1)
+                    
+                    Button(action: {
+                        // 없어도 될거같음
+                        viewModel.resetSearchState()
+                        
+                        // 수동 검색 실행
+                        viewModel.searchEverytimeLectures(
+                            type: searchType,
+                            keyword: searchText,
+                            year: "2025",
+                            semester: "2",
+                            page: 0,
+                            size: 50
+                        )
+                    }) {
+                        Text("확인")
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(searchText.count < 2 ? Color.gray.opacity(0.5) : Color.blue, lineWidth: 1)
+                    )
+                    .disabled(searchText.count < 2)
+                }
+                searchedLecturesView
+            }
 
-            if !selectedLectures.isEmpty {
+            // 선택된 강의들 표시
+            if !viewModel.selectedLectures.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
-                        ForEach(selectedLectures, id: \.self) { lecture in
+                        ForEach(viewModel.selectedLectures.indices, id: \.self) { index in
+                            let lecture = viewModel.selectedLectures[index]
                             HStack(spacing: 4) {
                                 Text(lecture.name)
                                 Button(action: {
-                                    selectedLectures.removeAll { $0 == lecture }
+                                    viewModel.selectedLectures.removeAll { $0 == lecture }
                                 }) {
                                     Image(systemName: "xmark.circle.fill")
                                         .foregroundColor(.gray)
@@ -225,68 +253,141 @@ struct LectureSearchBar: View {
                 }
             }
         }
-        .overlay(alignment: .top) {
-            if !searchedLectures.isEmpty {
-                ScrollView {
-                    VStack(spacing: 0) {
-                        ForEach(searchedLectures, id: \.self) { lecture in
-                            Button(action: {
-                                // 안고른 과목이면
-                                if !selectedLectures.contains(lecture) {
-                                    selectedLectures.append(lecture)
-                                    searchText = ""
-                                    searchedLectures = []
-                                }
-                                
-                            }) {
-                                VStack(alignment: .leading) {
-                                    Text("\(lecture.name) - \(lecture.professor)")
-                                    Text("\(lecture.codeSection)")
-                                    Text(lecture.time)
-                                }
-                                .padding()
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(Color.gray)
-                                
-                            }
-                            .foregroundStyle(Color.black)
-                            Divider()
-                        }
-                    }
-                    .background(Color.white)
-                    .cornerRadius(10)
-                }
-                .frame(height: 250)  // 최대 높이 제한, 필요에 따라 조절
-                .cornerRadius(10)
-                .offset(y: 54)
-            }
+        // ✅ 검색 기준이 바뀌면 결과 초기화
+        .onChange(of: searchType) { _ in
+            viewModel.resetSearchState()
+        }
+        .onChange(of: searchText) { _ in
+            viewModel.resetSearchState()
         }
     }
 }
 
 
+// 일단 시간표 생성에서만 쓰기
 struct LectureSearchBarWithUsedtime: View {
     
-    @Binding var searchText: String
+    @ObservedObject var viewModel: GenerateTimetableViewModel
+    
+    @State private var searchText: String = ""
+    @State private var searchType: String = "name"
+    @State var showAlert: Bool = false
+    
     @Binding var selectedLectures: [Lecture]
-    @Binding var searchedLectures: [Lecture]
     @Binding var usedTime: [[Int]]
 
     @FocusState private var isFocused: Bool
+
+    // 검색 결과 뷰
+    var searchedLecturesView: some View {
+        Group {
+            if !viewModel.searchedLectures.isEmpty {
+                ScrollView {
+                    VStack(spacing: 0) {
+                        ForEach(viewModel.searchedLectures.indices, id: \.self) { index in
+                            LazyVStack(spacing: 0) {
+                                let lecture = viewModel.searchedLectures[index]
+                                
+                                Button(action: {
+                                    if !selectedLectures.contains(lecture) {
+                                        
+                                        // 시간이 겹치면
+                                        if !canAddLectureAboutTime(timeString: lecture.time) {
+                                            showAlert = true
+                                        }
+                                        // 안겹치면
+                                        else {
+                                            selectedLectures.append(lecture)
+                                            fillUsedTime(timeString: lecture.time)
+                                            searchText = ""
+                                            viewModel.resetSearchState()
+                                        }
+                                    }
+                                }) {
+                                    VStack(alignment: .leading) {
+                                        Text("\(lecture.name) - \(lecture.professor) - \(lecture.credit)학점")
+                                        Text("\(lecture.codeSection)")
+                                        Text(lecture.time)
+                                    }
+                                    .padding()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .background(Color.gray.opacity(0.2))
+                                }
+                                .foregroundStyle(Color.black)
+                                .onAppear {
+                                    // 마지막 행에 도달하면
+                                    if(index == viewModel.searchedLectures.count - 3) {
+                                        // 마지막 페이지가 아닐때
+                                        if(!viewModel.isSearchLectureLoading && !viewModel.isSearchLectureLastPage) {
+                                            // 페이지를 증가시킨다
+                                            viewModel.searchLecturePage += 1
+                                            // 증가시킨 페이지로 추가 조회
+                                            viewModel.searchEverytimeLectures(type: searchType, keyword: searchText, year: "2025", semester: "2", page: viewModel.searchLecturePage, size: 50)
+                                        }
+                                    }
+                                }
+                                
+                                Divider()
+                            }
+                        }
+                        if(viewModel.isSearchLectureLoading) {
+                            ProgressView()
+                        }
+                    }
+                    .background(Color.white)
+                    .cornerRadius(10)
+                }
+                .frame(maxHeight: 250)
+                .cornerRadius(10)
+            }
+        }
+    }
     
-    @State var showAlert: Bool = false
+    
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            TextField("강의 검색", text: $searchText)
-                .focused($isFocused)
-                .modifier(MyTextFieldModifier(isFocused: isFocused))
-                .zIndex(1)
+            searchTypeButton
+            
+            VStack(spacing: 0) {
+                HStack {
+                    TextField("강의 검색", text: $searchText)
+                        .focused($isFocused)
+                        .modifier(MyTextFieldModifier(isFocused: isFocused))
+                        .zIndex(1)
+                    
+                    Button(action: {
+                        // 없어도 될거같음
+                        viewModel.resetSearchState()
+                        
+                        // 수동 검색 실행
+                        viewModel.searchEverytimeLectures(
+                            type: searchType,
+                            keyword: searchText,
+                            year: "2025",
+                            semester: "2",
+                            page: 0,
+                            size: 50
+                        )
+                    }) {
+                        Text("확인")
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(searchText.count < 2 ? Color.gray.opacity(0.5) : Color.blue, lineWidth: 1)
+                    )
+                    .disabled(searchText.count < 2)
+                }
+                searchedLecturesView
+            }
 
+            // 선택된 강의들 표시
             if !selectedLectures.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
-                        ForEach(selectedLectures, id: \.self) { lecture in
+                        ForEach(selectedLectures.indices, id: \.self) { index in
+                            let lecture = selectedLectures[index]
                             HStack(spacing: 4) {
                                 Text(lecture.name)
                                 Button(action: {
@@ -306,50 +407,11 @@ struct LectureSearchBarWithUsedtime: View {
                 }
             }
         }
-        .overlay(alignment: .top) {
-            if !searchedLectures.isEmpty {
-                ScrollView {
-                    VStack(spacing: 0) {
-                        ForEach(searchedLectures, id: \.self) { lecture in
-                            Button(action: {
-                                // 안고른 과목이면
-                                if !selectedLectures.contains(lecture) {
-                                    // 시간이 겹치면
-                                    if !canAddLectureAboutTime(timeString: lecture.time) {
-                                        showAlert = true
-                                    }
-                                    // 시간이 안겹치면
-                                    else {
-                                        selectedLectures.append(lecture)
-                                        fillUsedTime(timeString: lecture.time)
-                                        searchText = ""
-                                        searchedLectures = []
-                                    }
-                                }
-                                
-                                
-                            }) {
-                                VStack(alignment: .leading) {
-                                    Text("\(lecture.name) - \(lecture.professor) - \(lecture.credit)학점")
-                                    Text("\(lecture.codeSection)")
-                                    Text(lecture.time)
-                                }
-                                .padding()
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(Color.gray)
-                                
-                            }
-                            .foregroundStyle(Color.black)
-                            Divider()
-                        }
-                    }
-                    .background(Color.white)
-                    .cornerRadius(10)
-                }
-                .frame(height: 250)  // 최대 높이 제한, 필요에 따라 조절
-                .cornerRadius(10)
-                .offset(y: 54)
-            }
+        .onChange(of: searchType) { _ in
+            viewModel.resetSearchState()
+        }
+        .onChange(of: searchText) { _ in
+            viewModel.resetSearchState()
         }
         .alert("시간이 겹칩니다.", isPresented: $showAlert) {
                                 Button("확인", role: .cancel) { }
@@ -428,5 +490,33 @@ struct LectureSearchBarWithUsedtime: View {
             }
         }
         return true
+    }
+    
+    // 검색 기준 버튼 UI
+    var searchTypeButton: some View {
+        HStack(spacing: 8) {
+            ForEach(["name", "professor", "code"], id: \.self) { type in
+                Button(action: {
+                    searchType = type
+                }) {
+                    Text(displayName(for: type))
+                        .padding(.vertical, 6)
+                        .padding(.horizontal, 12)
+                        .background(searchType == type ? Color.blue : Color.gray.opacity(0.2))
+                        .foregroundColor(searchType == type ? .white : .black)
+                        .cornerRadius(10)
+                }
+            }
+        }
+    }
+    
+    // 검색 타입 문자열 → 사용자 친화적 이름
+    func displayName(for type: String) -> String {
+        switch type {
+        case "name": return "이름"
+        case "professor": return "교수"
+        case "code": return "코드"
+        default: return type
+        }
     }
 }

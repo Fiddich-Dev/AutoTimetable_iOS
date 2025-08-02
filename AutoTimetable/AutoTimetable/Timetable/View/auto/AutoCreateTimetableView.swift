@@ -12,28 +12,19 @@ import Combine
 struct AutoCreateTimetableView: View {
     
     @StateObject var viewModel = GenerateTimetableViewModel()
-    @Binding var isPresented: Bool
-
-    // 전공 검색 텍스트
-    @State private var searchText = ""
-    // 강의 검색 텍스트
-    @State private var searchLectureText = ""
-    @State private var searchLectureTextDebounced: String = ""
-    @State private var debounceCancellable: AnyCancellable? = nil
     
-    @State private var isActive = false
+    @Binding var isPresented: Bool
     
     @FocusState private var isFocused: FocusField?
     
     var body: some View {
-        VStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     
                     Text("포함시킬 전공")
                         .font(.title)
                     // 전공 검색 바
-                    DepartmentSearchBar(allDepartments: $viewModel.allDepartments, selectedDepartments: $viewModel.selectedDepartments, searchText: $searchText)
+                    CategorySearchBar(allCategories: $viewModel.allCategories, selectedCategories: $viewModel.selectedCategories)
                         .zIndex(1)
                     
                     // 전공 과목 수 선택
@@ -61,37 +52,40 @@ struct AutoCreateTimetableView: View {
                     
                     Divider()
                     
+                    Stepper(value: $viewModel.minCredit, in: 0...viewModel.maxCredit) {
+                        Text("최소 학점: \(viewModel.minCredit)")
+                    }
+                    Stepper(value: $viewModel.maxCredit, in: viewModel.minCredit...30) {
+                        Text("최대 학점: \(viewModel.maxCredit)")
+                    }
+                    
+                    Divider()
+                    
+                    Toggle("오전 수업 선호", isOn: $viewModel.preferMorning)
+                    Toggle("오후 수업 선호", isOn: $viewModel.preferAfternoon)
+                    
+                    Divider()
+                    
                     Text("제외하고 싶은 강의")
                         .font(.title)
-                    // 제외할 강의 추가, 삭제
-                    LectureSearchBar(searchText: $searchLectureText, selectedLectures: $viewModel.selectedDislikeLectures, searchedLectures: $viewModel.searchLectures)
-                        .zIndex(1)
+                    
+                    LectureSearchBarWithoutUsedtime(viewModel: viewModel)
                     
                     Spacer()
                 }
                 .padding(.horizontal, 20)
             } // scrollView
-            
-            NavigationLink(destination: SelectLikeLecturesView(viewModel: viewModel, isPresented: $isPresented), isActive: $isActive, label: {
-                Text("다음")
-                    .modifier(MyButtonModifier(isDisabled: false))
-                    .padding(.horizontal, 20)
-            })
-        } // vstack
-        .onAppear {
-            let year = viewModel.currentYearSemester.year
-            let semester = viewModel.currentYearSemester.semester
-            viewModel.getAllDepartments(year: year, semester: semester)
-        }
-        .onChange(of: searchLectureText) { newValue in
-            debounceCancellable?.cancel()
-            debounceCancellable = Just(newValue)
-                .delay(for: .milliseconds(500), scheduler: RunLoop.main)
-                .sink { debouncedValue in
-                    searchLectureTextDebounced = debouncedValue
-                    viewModel.searchLectures(keyword: debouncedValue)
+            .onAppear {
+                viewModel.fetchEverytimeCategories(year: "2025", semester: "2")
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: SelectLikeLecturesView(viewModel: viewModel, isPresented: $isPresented), label: {
+                        Text("다음")
+                    })
+                    .disabled(viewModel.selectedCategories.isEmpty || (viewModel.targetCultureCnt == 0 && viewModel.targetMajorCnt == 0))
                 }
-        }
+            }
     }
     
     enum FocusField: Hashable {

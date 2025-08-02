@@ -26,36 +26,53 @@ struct FriendSearchView: View {
                 Text("학번")
                     .font(.title2)
                 
-                TextField("학번만 입력", text: $studentId)
-                    .focused($isFocused, equals: .id)
-                    .modifier(MyTextFieldModifier(isFocused: isFocused == .id))
-                    .padding(.bottom, 8)
-                    .keyboardType(.numberPad)
+                HStack {
+                    
+                    TextField("학번만 입력", text: $studentId)
+                        .focused($isFocused, equals: .id)
+                        .modifier(MyTextFieldModifier(isFocused: isFocused == .id))
+                        .padding(.bottom, 8)
+                        .keyboardType(.numberPad)
+                    
+                    Button(action: {
+                        friendViewModel.resetSearchState()
+                        friendViewModel.searchFriend(studentId: studentId, page: 0, size: 20)
+                    }, label: {
+                        Text("검색")
+                    })
+                }
                 
-                ForEach(friendViewModel.findFriends, id: \.id) { friend in
-                    FriendCell(friend: .constant(friend), action: {
-                        friendViewModel.sendFriendRequest(receiverId: friend.id) {
-                            if let index = friendViewModel.findFriends.firstIndex(where: { $0.id == friend.id }) {
-                                friendViewModel.findFriends[index].status = .pending
+                ForEach(friendViewModel.findFriends.indices, id: \.self) { index in
+                    
+                    LazyVStack(spacing: 0) {
+                        var friend = friendViewModel.findFriends[index]
+                        
+                        FriendCell(friend: .constant(friend), action: {
+                            friendViewModel.sendFriendRequest(receiverId: friend.id) {
+                                if let index = friendViewModel.findFriends.firstIndex(where: { $0.id == friend.id }) {
+                                    friendViewModel.findFriends[index].status = .pending
+                                }
+                            }
+                        })
+                        .onAppear {
+                            if(index == friendViewModel.findFriends.count - 3) {
+                                if(!friendViewModel.isSearchFriendsLoading && !friendViewModel.isSearchFriendsLastPage) {
+                                    friendViewModel.searchFriendsPage += 1
+                                    
+                                    friendViewModel.searchFriend(studentId: studentId, page: friendViewModel.searchFriendsPage, size: 20)
+                                }
                             }
                         }
-                    })
+                        
+                        
+                    }
+                    
+                    
                 }
 
                 
             }
             .padding(.horizontal, 20)
-        }
-        .onChange(of: studentId) { newValue in
-            debounceCancellable?.cancel()
-            debounceCancellable = Just(newValue)
-                .delay(for: .milliseconds(500), scheduler: RunLoop.main)
-                .sink { debouncedValue in
-                    searchStudentIdDebounced = debouncedValue
-                    if !debouncedValue.trimmingCharacters(in: .whitespaces).isEmpty {
-                        friendViewModel.searchFriend(studentId: debouncedValue)
-                    }
-                }
         }
         .onDisappear {
             friendViewModel.findFriends = []
