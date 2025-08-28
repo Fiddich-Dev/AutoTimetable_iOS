@@ -28,6 +28,8 @@ class AuthViewModel: ObservableObject {
     @Published var alertMessage: String = ""
 
     init() {
+//        deleteToken()
+//        deleteRefreshToken()
         // 현재 학년도 조회
         loadCurrentSemester()
         // 플러그인 주입

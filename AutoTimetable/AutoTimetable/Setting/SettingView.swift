@@ -35,7 +35,7 @@ struct SettingView: View {
                 Section(header: Text("고객지원")) {
                     Button(action: {
                         let kakaoAppURL = URL(string: "kakaotalk://")!
-                        let kakaoOpenChatURL = URL(string: "https://open.kakao.com/o/sbrJP8Fh")!
+                        let kakaoOpenChatURL = URL(string: "https://open.kakao.com/o/sBrj8ZKh")!
 
                         if UIApplication.shared.canOpenURL(kakaoAppURL) {
                             // 카카오톡 설치되어 있으면 open.kakao.com도 앱에서 실행됨

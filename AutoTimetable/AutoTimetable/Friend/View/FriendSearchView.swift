@@ -64,7 +64,7 @@ struct FriendSearchView: View {
                             }
                         }
                         
-                        Divider()
+//                        Divider()
                     }
                 }
             }

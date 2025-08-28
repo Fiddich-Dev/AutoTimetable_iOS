@@ -114,9 +114,9 @@
 		3B5EC32D2E0EEFCE0086A469 /* SavedTimetableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedTimetableView.swift; sourceTree = "<group>"; };
 		3B5EC32F2E0FFA280086A469 /* ActionCardButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCardButton.swift; sourceTree = "<group>"; };
 		3B5EC3312E1103710086A469 /* EveryTimeMappingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EveryTimeMappingView.swift; sourceTree = "<group>"; };
-		3B8D89E62DEEC37D00AE1944 /* AutoTimetable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoTimetable.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		3B8D89F42DEEC37E00AE1944 /* AutoTimetableTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AutoTimetableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3B8D89FE2DEEC37E00AE1944 /* AutoTimetableUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AutoTimetableUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B8D89E62DEEC37D00AE1944 /* Schedule-SKKU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Schedule-SKKU.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B8D89F42DEEC37E00AE1944 /* Schedule-SKKUTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Schedule-SKKUTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B8D89FE2DEEC37E00AE1944 /* Schedule-SKKUUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Schedule-SKKUUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BEB2B722E1785A000ABF7DD /* GenerateTimetableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateTimetableViewModel.swift; sourceTree = "<group>"; };
 		3BEB2B792E1C326C00ABF7DD /* AuthPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPlugin.swift; sourceTree = "<group>"; };
 		3BEB2B7C2E1E26A500ABF7DD /* Modifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modifier.swift; sourceTree = "<group>"; };
@@ -333,9 +333,9 @@
 		3B8D89E72DEEC37D00AE1944 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3B8D89E62DEEC37D00AE1944 /* AutoTimetable.app */,
-				3B8D89F42DEEC37E00AE1944 /* AutoTimetableTests.xctest */,
-				3B8D89FE2DEEC37E00AE1944 /* AutoTimetableUITests.xctest */,
+				3B8D89E62DEEC37D00AE1944 /* Schedule-SKKU.app */,
+				3B8D89F42DEEC37E00AE1944 /* Schedule-SKKUTests.xctest */,
+				3B8D89FE2DEEC37E00AE1944 /* Schedule-SKKUUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -379,9 +379,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3B8D89E52DEEC37D00AE1944 /* AutoTimetable */ = {
+		3B8D89E52DEEC37D00AE1944 /* Schedule-SKKU */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3B8D8A082DEEC37E00AE1944 /* Build configuration list for PBXNativeTarget "AutoTimetable" */;
+			buildConfigurationList = 3B8D8A082DEEC37E00AE1944 /* Build configuration list for PBXNativeTarget "Schedule-SKKU" */;
 			buildPhases = (
 				3B8D89E22DEEC37D00AE1944 /* Sources */,
 				3B8D89E32DEEC37D00AE1944 /* Frameworks */,
@@ -391,7 +391,7 @@
 			);
 			dependencies = (
 			);
-			name = AutoTimetable;
+			name = "Schedule-SKKU";
 			packageProductDependencies = (
 				3B5EC2952DF1730E0086A469 /* CombineMoya */,
 				3B5EC2972DF1730E0086A469 /* Moya */,
@@ -401,12 +401,12 @@
 				4D0B3B482E3E3C5C007E8996 /* PopupView */,
 			);
 			productName = AutoTimetable;
-			productReference = 3B8D89E62DEEC37D00AE1944 /* AutoTimetable.app */;
+			productReference = 3B8D89E62DEEC37D00AE1944 /* Schedule-SKKU.app */;
 			productType = "com.apple.product-type.application";
 		};
-		3B8D89F32DEEC37E00AE1944 /* AutoTimetableTests */ = {
+		3B8D89F32DEEC37E00AE1944 /* Schedule-SKKUTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3B8D8A0B2DEEC37E00AE1944 /* Build configuration list for PBXNativeTarget "AutoTimetableTests" */;
+			buildConfigurationList = 3B8D8A0B2DEEC37E00AE1944 /* Build configuration list for PBXNativeTarget "Schedule-SKKUTests" */;
 			buildPhases = (
 				3B8D89F02DEEC37E00AE1944 /* Sources */,
 				3B8D89F12DEEC37E00AE1944 /* Frameworks */,
@@ -420,16 +420,16 @@
 			fileSystemSynchronizedGroups = (
 				3B8D89F72DEEC37E00AE1944 /* AutoTimetableTests */,
 			);
-			name = AutoTimetableTests;
+			name = "Schedule-SKKUTests";
 			packageProductDependencies = (
 			);
 			productName = AutoTimetableTests;
-			productReference = 3B8D89F42DEEC37E00AE1944 /* AutoTimetableTests.xctest */;
+			productReference = 3B8D89F42DEEC37E00AE1944 /* Schedule-SKKUTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		3B8D89FD2DEEC37E00AE1944 /* AutoTimetableUITests */ = {
+		3B8D89FD2DEEC37E00AE1944 /* Schedule-SKKUUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3B8D8A0E2DEEC37E00AE1944 /* Build configuration list for PBXNativeTarget "AutoTimetableUITests" */;
+			buildConfigurationList = 3B8D8A0E2DEEC37E00AE1944 /* Build configuration list for PBXNativeTarget "Schedule-SKKUUITests" */;
 			buildPhases = (
 				3B8D89FA2DEEC37E00AE1944 /* Sources */,
 				3B8D89FB2DEEC37E00AE1944 /* Frameworks */,
@@ -443,11 +443,11 @@
 			fileSystemSynchronizedGroups = (
 				3B8D8A012DEEC37E00AE1944 /* AutoTimetableUITests */,
 			);
-			name = AutoTimetableUITests;
+			name = "Schedule-SKKUUITests";
 			packageProductDependencies = (
 			);
 			productName = AutoTimetableUITests;
-			productReference = 3B8D89FE2DEEC37E00AE1944 /* AutoTimetableUITests.xctest */;
+			productReference = 3B8D89FE2DEEC37E00AE1944 /* Schedule-SKKUUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -473,7 +473,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 3B8D89E12DEEC37C00AE1944 /* Build configuration list for PBXProject "AutoTimetable" */;
+			buildConfigurationList = 3B8D89E12DEEC37C00AE1944 /* Build configuration list for PBXProject "Schedule-SKKU" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -492,9 +492,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3B8D89E52DEEC37D00AE1944 /* AutoTimetable */,
-				3B8D89F32DEEC37E00AE1944 /* AutoTimetableTests */,
-				3B8D89FD2DEEC37E00AE1944 /* AutoTimetableUITests */,
+				3B8D89E52DEEC37D00AE1944 /* Schedule-SKKU */,
+				3B8D89F32DEEC37E00AE1944 /* Schedule-SKKUTests */,
+				3B8D89FD2DEEC37E00AE1944 /* Schedule-SKKUUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -595,12 +595,12 @@
 /* Begin PBXTargetDependency section */
 		3B8D89F62DEEC37E00AE1944 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 3B8D89E52DEEC37D00AE1944 /* AutoTimetable */;
+			target = 3B8D89E52DEEC37D00AE1944 /* Schedule-SKKU */;
 			targetProxy = 3B8D89F52DEEC37E00AE1944 /* PBXContainerItemProxy */;
 		};
 		3B8D8A002DEEC37E00AE1944 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 3B8D89E52DEEC37D00AE1944 /* AutoTimetable */;
+			target = 3B8D89E52DEEC37D00AE1944 /* Schedule-SKKU */;
 			targetProxy = 3B8D89FF2DEEC37E00AE1944 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -736,6 +736,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AutoTimetable/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -746,7 +747,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
@@ -755,10 +756,11 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TARGETED_DEVICE_FAMILY = 1;
 				XROS_DEPLOYMENT_TARGET = 2.5;
 			};
 			name = Debug;
@@ -777,6 +779,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AutoTimetable/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -787,7 +790,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
@@ -796,10 +799,11 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TARGETED_DEVICE_FAMILY = 1;
 				XROS_DEPLOYMENT_TARGET = 2.5;
 			};
 			name = Release;
@@ -822,7 +826,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AutoTimetable.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AutoTimetable";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Schedule-SKKU.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Schedule-SKKU";
 				XROS_DEPLOYMENT_TARGET = 2.5;
 			};
 			name = Debug;
@@ -845,7 +849,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AutoTimetable.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AutoTimetable";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Schedule-SKKU.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Schedule-SKKU";
 				XROS_DEPLOYMENT_TARGET = 2.5;
 			};
 			name = Release;
@@ -897,7 +901,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3B8D89E12DEEC37C00AE1944 /* Build configuration list for PBXProject "AutoTimetable" */ = {
+		3B8D89E12DEEC37C00AE1944 /* Build configuration list for PBXProject "Schedule-SKKU" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3B8D8A062DEEC37E00AE1944 /* Debug */,
@@ -906,7 +910,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3B8D8A082DEEC37E00AE1944 /* Build configuration list for PBXNativeTarget "AutoTimetable" */ = {
+		3B8D8A082DEEC37E00AE1944 /* Build configuration list for PBXNativeTarget "Schedule-SKKU" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3B8D8A092DEEC37E00AE1944 /* Debug */,
@@ -915,7 +919,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3B8D8A0B2DEEC37E00AE1944 /* Build configuration list for PBXNativeTarget "AutoTimetableTests" */ = {
+		3B8D8A0B2DEEC37E00AE1944 /* Build configuration list for PBXNativeTarget "Schedule-SKKUTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3B8D8A0C2DEEC37E00AE1944 /* Debug */,
@@ -924,7 +928,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3B8D8A0E2DEEC37E00AE1944 /* Build configuration list for PBXNativeTarget "AutoTimetableUITests" */ = {
+		3B8D8A0E2DEEC37E00AE1944 /* Build configuration list for PBXNativeTarget "Schedule-SKKUUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3B8D8A0F2DEEC37E00AE1944 /* Debug */,
